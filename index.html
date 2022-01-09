@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            background: #000000;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn {
+            width: 100px;
+            height: 50px;
+            color: orange;
+            background-color: white;
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <canvas id="canvas" width="600" height="600"></canvas>
+    </div>
+  
+    <script>
+        const wrap = document.getElementById("wrap");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const width = 600;
+        const height = 600;
+        canvas.width = width;
+        canvas.height = height;
+        let progressToGame = 0;
+        let speed = 1;
+        let numDuts = 10;
+        let dusts = [];//пыль
+
+
+
+        //создаем звездное небо
+        function Dust() {
+            this.pos = {
+                x: Math.floor(Math.random() * canvas.width),
+                y: Math.floor(Math.random() * canvas.height)
+            };
+            this.update = function () {
+                this.pos.y += speed;
+                if (this.pos.y > canvas.height + 10) {
+                    this.pos.x = Math.floor(Math.random() * canvas.width);
+                    this.pos.y = -10;
+                }
+            }
+            this.draw = function () {
+                ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
+            }
+        }
+
+        //заполняем массив звездами
+        function setupGame() {
+            progressToGame = 0;
+            for (let i = 0; i < numDuts; i++) {
+                dusts.push(new Dust());
+            }
+        }
+        //обновляем звезды
+        function updateAll() {
+            for (let i = 0; i < dusts.length; i++) {
+                dusts[i].update();
+            }
+            draw()
+        }
+
+        function draw() {
+            ctx.beginPath();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dusts
+            ctx.fillStyle = "white";
+            for (var i = 0; i < dusts.length; i++) {
+                dusts[i].draw();
+            }
+            //Borders
+            ctx.fillStyle = "grey";
+            ctx.beginPath();
+            ctx.rect(0, 0, canvas.width, 4);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.rect(0, canvas.height, canvas.width, -4);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.rect(0, 0, 5, canvas.height);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.rect(canvas.width, 0, -5, canvas.height);
+            ctx.fill();
+
+            drawMenu();
+        }
+
+
+
+
+
+
+
+        setupGame();
+        setInterval(updateAll, 10);
+
+
+
+
+
+        function drawMenu() {
+            let shakingX = (Math.random() * 3) - 1.5;
+            let shakingY = (Math.random() * 3) - 1.5;
+            ctx.fillStyle = "orange";
+            ctx.font = "50px Arial";
+            ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, (97 - progressToGame) + shakingY);
+            ctx.fillStyle = "orange";
+            ctx.font = "50px Arial";
+            ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, (100 - progressToGame) + shakingY);
+
+            ctx.beginPath();
+            ctx.rect((canvas.width / 2 - 135) + shakingX, (110 - progressToGame) + shakingY, 265, 10);
+            ctx.fillStyle = "darkred";
+            ctx.fill();
+            ctx.beginPath();
+            ctx.rect((canvas.width / 2 - 135) + shakingX, (115 - progressToGame) + shakingY, 265, 10);
+            ctx.fillStyle = "orange";
+            ctx.fill();
+
+            ctx.fillStyle = "orange";
+            ctx.font = "30px Arial";
+            ctx.fillText("Start Game", (canvas.width / 2 - 80), (200 - progressToGame));
+            ctx.fillStyle = "orange";
+            ctx.font = "30px Arial";
+            ctx.fillText("Rules", (canvas.width / 2 - 45), (250 - progressToGame));
+            ctx.fillStyle = "orange";
+            ctx.font = "30px Arial";
+            ctx.fillText("Score", (canvas.width / 2 - 45), (300 - progressToGame));
+            ctx.fillStyle = "orange";
+            ctx.font = "30px Arial";
+            ctx.fillText("About", (canvas.width / 2 - 45), (350 - progressToGame));
+
+            // let btnStart
+            //  = {
+            //     x: canvas.width / 2 - 60,
+            //     y: canvas.height / 2 - 20,
+            //     w: 120,
+            //     h: 40,
+            //     text: "Start Game",
+            //     state: "default",
+            //     draw: function () {
+            //         ctx.font = "20px Arial ";
+            //         switch (this.state) {
+            //             case "over":
+            //                 ctx.fillStyle = "darkred";
+            //                 ctx.fillRect(this.x, this.y, this.w, this.h);
+            //                 ctx.fillStyle = "black";
+            //                 ctx.fillText("Start Game", this.x + this.w / 12, this.y + this.h / 2+8);
+            //                 break;
+            //             default:
+            //                 // ctx.fillStyle = "red";
+            //                 ctx.fillRect(this.x, this.y, this.w, this.h);
+            //                 ctx.fillStyle = "black";
+            //                 ctx.fillText("Start Game", this.x + this.w / 12, this.y + this.h / 2+8);
+            //         }
+            //     }
+            // };
+            // btnStart.draw();
+            // canvas.addEventListener("mousedown", function (e) {
+            //     if (checkCollision(e.offsetX, e.offsetY, btnStart
+            //     ))
+            //         console.log(e)
+            // }, false);
+
+
+            // canvas.addEventListener("mousemove", function (e) {
+            //     btnStart
+            //     .state = checkCollision(e.offsetX, e.offsetY, btnStart
+            //     ) ? "over" : "def";
+            //     btnStart
+            //     .draw();
+            // }, false);
+
+            // function checkCollision(x, y, obj) {//Проверяет входит ли точка в  прямоугольник
+            //     return x >= obj.x && x <= obj.x + obj.w &&
+            //         y >= obj.y && y <= obj.y + obj.h;
+            // }
+
+        }
+    </script>
+</body>
+
+</html>
