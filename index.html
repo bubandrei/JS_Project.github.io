@@ -13,38 +13,68 @@
             background: #000000;
         }
 
-        canvas {
+        /* canvas {
             display: block;
             margin: 0 auto;
-        }
+        } */
 
         .btn {
-            width: 100px;
+            width: 120px;
             height: 50px;
+            font-size: 40px;
             color: orange;
-            background-color: white;
+            /* background-color: white; */
             position: absolute;
+            left: 240px;
+            top: 20%;
+            background-color: Transparent;
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .rules {
+            top: 30%;
+        }
+
+        .score {
+            top: 40%;
         }
     </style>
 </head>
 
 <body>
     <div id="wrap">
-        <canvas id="canvas" width="600" height="600"></canvas>
+        <canvas id="canvas"></canvas>
     </div>
-  
+
     <script>
         const wrap = document.getElementById("wrap");
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
         const width = 600;
-        const height = 600;
+        const height = 800;
         canvas.width = width;
         canvas.height = height;
         let progressToGame = 0;
         let speed = 1;
         let numDuts = 10;
         let dusts = [];//пыль
+        let btnStart = document.createElement("button");
+        btnStart.innerHTML = "Start Game";
+        btnStart.classList.add('btn')
+        wrap.append(btnStart);
+        let btnRules = document.createElement('button');
+        btnRules.innerHTML = "Rules";
+        btnRules.classList.add('btn', 'rules')
+        wrap.append(btnRules);
+        let btnScore = document.createElement('button');
+        btnScore.innerHTML = "Score";
+        btnScore.classList.add('btn', 'score')
+        wrap.append(btnScore);
+
 
 
 
@@ -87,39 +117,29 @@
 
             // Dusts
             ctx.fillStyle = "white";
-            for (var i = 0; i < dusts.length; i++) {
+            for (let i = 0; i < dusts.length; i++) {
                 dusts[i].draw();
             }
             //Borders
             ctx.fillStyle = "grey";
             ctx.beginPath();
-            ctx.rect(0, 0, canvas.width, 4);
+            ctx.rect(0, 20, canvas.width, 4);
             ctx.fill();
             ctx.beginPath();
             ctx.rect(0, canvas.height, canvas.width, -4);
             ctx.fill();
             ctx.beginPath();
-            ctx.rect(0, 0, 5, canvas.height);
+            ctx.rect(0, 20, 4, canvas.height);
             ctx.fill();
             ctx.beginPath();
-            ctx.rect(canvas.width, 0, -5, canvas.height);
+            ctx.rect(canvas.width, 20, -4, canvas.height);
             ctx.fill();
 
             drawMenu();
         }
 
-
-
-
-
-
-
         setupGame();
         setInterval(updateAll, 10);
-
-
-
-
 
         function drawMenu() {
             let shakingX = (Math.random() * 3) - 1.5;
@@ -140,65 +160,18 @@
             ctx.fillStyle = "orange";
             ctx.fill();
 
-            ctx.fillStyle = "orange";
-            ctx.font = "30px Arial";
-            ctx.fillText("Start Game", (canvas.width / 2 - 80), (200 - progressToGame));
-            ctx.fillStyle = "orange";
-            ctx.font = "30px Arial";
-            ctx.fillText("Rules", (canvas.width / 2 - 45), (250 - progressToGame));
-            ctx.fillStyle = "orange";
-            ctx.font = "30px Arial";
-            ctx.fillText("Score", (canvas.width / 2 - 45), (300 - progressToGame));
-            ctx.fillStyle = "orange";
-            ctx.font = "30px Arial";
-            ctx.fillText("About", (canvas.width / 2 - 45), (350 - progressToGame));
-
-            // let btnStart
-            //  = {
-            //     x: canvas.width / 2 - 60,
-            //     y: canvas.height / 2 - 20,
-            //     w: 120,
-            //     h: 40,
-            //     text: "Start Game",
-            //     state: "default",
-            //     draw: function () {
-            //         ctx.font = "20px Arial ";
-            //         switch (this.state) {
-            //             case "over":
-            //                 ctx.fillStyle = "darkred";
-            //                 ctx.fillRect(this.x, this.y, this.w, this.h);
-            //                 ctx.fillStyle = "black";
-            //                 ctx.fillText("Start Game", this.x + this.w / 12, this.y + this.h / 2+8);
-            //                 break;
-            //             default:
-            //                 // ctx.fillStyle = "red";
-            //                 ctx.fillRect(this.x, this.y, this.w, this.h);
-            //                 ctx.fillStyle = "black";
-            //                 ctx.fillText("Start Game", this.x + this.w / 12, this.y + this.h / 2+8);
-            //         }
-            //     }
-            // };
-            // btnStart.draw();
-            // canvas.addEventListener("mousedown", function (e) {
-            //     if (checkCollision(e.offsetX, e.offsetY, btnStart
-            //     ))
-            //         console.log(e)
-            // }, false);
-
-
-            // canvas.addEventListener("mousemove", function (e) {
-            //     btnStart
-            //     .state = checkCollision(e.offsetX, e.offsetY, btnStart
-            //     ) ? "over" : "def";
-            //     btnStart
-            //     .draw();
-            // }, false);
-
-            // function checkCollision(x, y, obj) {//Проверяет входит ли точка в  прямоугольник
-            //     return x >= obj.x && x <= obj.x + obj.w &&
-            //         y >= obj.y && y <= obj.y + obj.h;
-            // }
-
+            // ctx.fillStyle = "orange";
+            // ctx.font = "30px Arial";
+            // ctx.fillText("Start Game", (canvas.width / 2 - 80), (200 - progressToGame));
+            // ctx.fillStyle = "orange";
+            // ctx.font = "30px Arial";
+            // ctx.fillText("Rules", (canvas.width / 2 - 45), (250 - progressToGame));
+            // ctx.fillStyle = "orange";
+            // ctx.font = "30px Arial";
+            // ctx.fillText("Score", (canvas.width / 2 - 45), (300 - progressToGame));
+            // ctx.fillStyle = "orange";
+            // ctx.font = "30px Arial";
+            // ctx.fillText("About", (canvas.width / 2 - 45), (350 - progressToGame));
         }
     </script>
 </body>
