@@ -33,6 +33,7 @@
             cursor: pointer;
             overflow: hidden;
             text-align: center;
+          
         }
 
         .rules {
@@ -42,6 +43,18 @@
         .score {
             top: 40%;
         }
+
+        .rule {
+            color: orange;
+            position: absolute;
+            left: 50px;
+            top: 30%;
+            background: transparent;
+            font-size: 20px;
+            font-family: Arial;
+            text-align: center;
+            width: 500px;
+        }
     </style>
 </head>
 
@@ -50,129 +63,8 @@
         <canvas id="canvas"></canvas>
     </div>
 
-    <script>
-        const wrap = document.getElementById("wrap");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        const width = 600;
-        const height = 800;
-        canvas.width = width;
-        canvas.height = height;
-        let progressToGame = 0;
-        let speed = 1;
-        let numDuts = 10;
-        let dusts = [];//пыль
-        let btnStart = document.createElement("button");
-        btnStart.innerHTML = "Start Game";
-        btnStart.classList.add('btn')
-        wrap.append(btnStart);
-        let btnRules = document.createElement('button');
-        btnRules.innerHTML = "Rules";
-        btnRules.classList.add('btn', 'rules')
-        wrap.append(btnRules);
-        let btnScore = document.createElement('button');
-        btnScore.innerHTML = "Score";
-        btnScore.classList.add('btn', 'score')
-        wrap.append(btnScore);
 
-
-
-
-        //создаем звездное небо
-        function Dust() {
-            this.pos = {
-                x: Math.floor(Math.random() * canvas.width),
-                y: Math.floor(Math.random() * canvas.height)
-            };
-            this.update = function () {
-                this.pos.y += speed;
-                if (this.pos.y > canvas.height + 10) {
-                    this.pos.x = Math.floor(Math.random() * canvas.width);
-                    this.pos.y = -10;
-                }
-            }
-            this.draw = function () {
-                ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
-            }
-        }
-
-        //заполняем массив звездами
-        function setupGame() {
-            progressToGame = 0;
-            for (let i = 0; i < numDuts; i++) {
-                dusts.push(new Dust());
-            }
-        }
-        //обновляем звезды
-        function updateAll() {
-            for (let i = 0; i < dusts.length; i++) {
-                dusts[i].update();
-            }
-            draw()
-        }
-
-        function draw() {
-            ctx.beginPath();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dusts
-            ctx.fillStyle = "white";
-            for (let i = 0; i < dusts.length; i++) {
-                dusts[i].draw();
-            }
-            //Borders
-            ctx.fillStyle = "grey";
-            ctx.beginPath();
-            ctx.rect(0, 20, canvas.width, 4);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.rect(0, canvas.height, canvas.width, -4);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.rect(0, 20, 4, canvas.height);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.rect(canvas.width, 20, -4, canvas.height);
-            ctx.fill();
-
-            drawMenu();
-        }
-
-        setupGame();
-        setInterval(updateAll, 10);
-
-        function drawMenu() {
-            let shakingX = (Math.random() * 3) - 1.5;
-            let shakingY = (Math.random() * 3) - 1.5;
-            ctx.fillStyle = "orange";
-            ctx.font = "50px Arial";
-            ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, (97 - progressToGame) + shakingY);
-            ctx.fillStyle = "orange";
-            ctx.font = "50px Arial";
-            ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, (100 - progressToGame) + shakingY);
-
-            ctx.beginPath();
-            ctx.rect((canvas.width / 2 - 135) + shakingX, (110 - progressToGame) + shakingY, 265, 10);
-            ctx.fillStyle = "darkred";
-            ctx.fill();
-            ctx.beginPath();
-            ctx.rect((canvas.width / 2 - 135) + shakingX, (115 - progressToGame) + shakingY, 265, 10);
-            ctx.fillStyle = "orange";
-            ctx.fill();
-
-            // ctx.fillStyle = "orange";
-            // ctx.font = "30px Arial";
-            // ctx.fillText("Start Game", (canvas.width / 2 - 80), (200 - progressToGame));
-            // ctx.fillStyle = "orange";
-            // ctx.font = "30px Arial";
-            // ctx.fillText("Rules", (canvas.width / 2 - 45), (250 - progressToGame));
-            // ctx.fillStyle = "orange";
-            // ctx.font = "30px Arial";
-            // ctx.fillText("Score", (canvas.width / 2 - 45), (300 - progressToGame));
-            // ctx.fillStyle = "orange";
-            // ctx.font = "30px Arial";
-            // ctx.fillText("About", (canvas.width / 2 - 45), (350 - progressToGame));
-        }
+    <script src="game.js">   
     </script>
 </body>
 
