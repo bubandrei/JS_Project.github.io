@@ -18,7 +18,7 @@ const BULLET_SIZE = 4;
 const EXHAUST_SIZE = 3;
 
 
-var keysDown = [];
+let keysDown = [];
 let inGame = false;// по умолчанию не в игре фолс
 let inMenu = true;// по умолчанию в меню тру
 // let progressToGame = 0;
@@ -28,10 +28,61 @@ let dusts = [];//пыль
 let bullets = [];//пули
 let exhausts = [];//выхлоп от игрока
 let player1;
+let curWave = 0;//текущая волна
+let startWave = false;//начинаем с неволны
+let aliens = []; //создаем массив для врагов
 
-var tex_player1 = new Image();
+let tex_player1 = new Image();
 tex_player1.src = "player1.png";
+let tex_alien1 = new Image();
+tex_alien1.src = "alien1.png";
+let tex_alien2 = new Image();
+tex_alien2.src = "alien2.png";
+let tex_alien3 = new Image();
+tex_alien3.src = "alien3.png";
+let tex_alien4 = new Image();
+tex_alien4.src = "alien4.png";
+let tex_alien5 = new Image();
+tex_alien5.src = "alien5.png";
 
+//создаем массив волн врагов
+let waves = [
+    [1, 1],
+    [1, 1, 0, 0],
+    [2, 2, 2, 2, 2],
+    [1, 0, 0, 2, 2],
+    [1, 1, 0, 0, 2, 4, 4],
+    [3, 3, 3, 3, 3, 3],
+    [1, 1, 0, 0, 0, 0, 2, 4, 4, 3, 3]
+]
+
+
+// Alien Patterns (0 up, 1 down, 2 left, 3 right, 4 shoot, 5 delay)
+let pattern_1 = [
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 4, 5, 1, 1, 1, 1
+];
+let pattern_2 = [
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 5, 5, 4, 5, 4, 5, 4, 5, 5, 5
+];
+let pattern_3 = [
+    1, 1, 1, 1, 2, 1, 1, 1, 1, 3
+];
+let pattern_4 = [
+    1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 2, 4, 2, 4, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+];
+let pattern_5 = [
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2
+];
+
+// Alien Types - 0 normal / 1 longranged / 2 kamakazi / 3 small fighter / 4 heavybomber
+//определяем все показатели врагов(здоровье, скорость, размеры, скорость стрельбы, очки, действие)
+let alienSprites = [tex_alien1, tex_alien2, tex_alien3, tex_alien4, tex_alien5];
+let alienHealths = [4, 3, 2, 1, 10];
+let alienSpeeds = [1.5, 1, 2, 3, 0.5];
+let alienSizes = [25, 40, 20, 20, 35];
+let alienBulletSpeeds = [2, 4, 0, 2.5, 1.5];
+let alienValues = [2000, 2500, 1500, 2000, 3000];
+let alienPatterns = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5];
 
 
 let btnStart = document.createElement("button");
@@ -201,6 +252,82 @@ function Bullet(x, y, _speed) {
         bullets.splice(this.index, 1);
     }
 }
+function Alien(x, y, _type) {
+    this.pos = { x, y };
+    this.type = _type; // номер волны начинается с 1
+
+    if (this.type == 1) {//координаты начала движения врагов
+        this.pos.x = -((Math.random() * 250) + 20);
+        this.pos.y = (Math.random() * 100) + 100;
+
+        if (Math.random() > 0.5) {
+            this.pos.x = canvas.width - this.pos.x;//???????????????????????????????????????????????????????????????
+        }
+    }
+    this.sprite = alienSprites[this.type];
+    this.speed = alienSpeeds[this.type];
+    this.size = alienSizes[this.type];
+    this.pattern = alienPatterns[this.type];
+
+    this.stepInPattern = Math.floor(Math.random() * this.pattern.length * 10);
+
+    this.update = function () {
+        // Вернуться к началу, если дошел до низа
+        if (this.pos.y > canvas.height - 30) {
+            this.pos.x = Math.random() * (canvas.width - 100) + 50;
+            this.pos.y = 20;
+        }
+
+        // Repeativly increments through the pattern (changes every 10 frames)Повторно увеличивает шаблон (меняется каждые 10 кадров)
+        this.stepInPattern++;
+        if (this.stepInPattern > this.pattern.length * 10)
+            this.stepInPattern = 0;
+        // Performs instruction
+        switch (this.pattern[Math.floor(this.stepInPattern / 10)]) {
+            case 0:
+                this.pos.y -= this.speed;
+                break;
+
+            case 1:
+                this.pos.y += this.speed;
+                break;
+
+            case 2:
+                this.pos.x -= this.speed * this.dir;
+                break;
+
+            case 3:
+                this.pos.x += this.speed * this.dir;
+                break;
+
+            case 4:
+                if (!this.firedShot)
+                    bullets.push(new Bullet(this.pos.x, this.pos.y, -this.bulletSpeed));
+                this.firedShot = true;
+                break;
+
+            case 5:
+                break;
+        }
+        // Change direction if hitting edge
+        if (this.pos.x < this.size)
+            this.dir = -1;
+        if (this.pos.x > canvas.width - this.size)
+            this.dir = 1;
+
+    }
+    // Draws to frame
+    this.draw = function () {
+        ctx.drawImage(
+            this.sprite,
+            this.pos.x - this.size / 2,
+            this.pos.y - this.size / 2,
+            this.size,
+            this.size);
+    }
+
+}
+
 
 //функцмя звезды
 function Dust() {
@@ -223,17 +350,17 @@ function Dust() {
 function Exhaust(x, y) {
     this.pos = { x: x + Math.floor(Math.random() * 8) - 4, y };
     this.lifetime = Math.floor(Math.random() * 30);
-    
+
     this.update = function () {
         //движение
         this.pos.x += (Math.random() * 2) - 1;
         this.pos.y += speed;
 
         this.lifetime--;
-		if (this.lifetime <= 0) {
-			this.index = exhausts.indexOf(this);
-			exhausts.splice(this.index, 1);
-		}
+        if (this.lifetime <= 0) {
+            this.index = exhausts.indexOf(this);
+            exhausts.splice(this.index, 1);
+        }
 
     }
     this.draw = function () {
@@ -275,8 +402,16 @@ function update() {
         }
 
         player1.update();
+
+        // Updates Aliens
+        for (var i = 0; i < aliens.length; i++)
+            aliens[i].update();
     } else {
 
+    }
+    // Updates wave
+    if (inGame) {
+        updateWave();
     }
     draw()
 }
@@ -320,6 +455,27 @@ function draw() {
 
 
 }
+
+function updateWave() {
+    if (aliens.length == 0 && !inMenu) {//если врагов 0 и мы не в меню
+        startWave = true;//флаг тру для волны
+        curWave++; // добавлеям волну
+    }
+    if (startWave) {
+        startWave = false;
+        if (curWave <= waves.length) {//если текущая волна меньши длинны массива
+            for (let i = 0; i < waves[curWave - 1].length; i++) { //пока i меньше длинны подмассива(кол-во врагов
+                // в волне) 
+                aliens.push(new Alien(
+                    Math.random() * (canvas.width - 100) + 50,
+                    (Math.random() * 100) - 100,
+                    waves[curWave - 1][i]));//двумерный массив
+
+            }
+        }
+    }
+}
+
 
 setupGame();
 setInterval(update, 10);
@@ -372,6 +528,10 @@ function drawGame() {
     ctx.fillStyle = 'white';
     for (let i = 0; i < exhausts.length; i++) {
         exhausts[i].draw();
+    }
+    //враги
+    for (let i = 0; i < aliens.length; i++) {
+        aliens[i].draw();
     }
 
     player1.draw();
