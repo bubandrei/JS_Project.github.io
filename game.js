@@ -15,8 +15,8 @@ const START_WAVE = 1;
 const START_SPEED = 1;
 const MAX_SPEED = 4;
 
-const PLAYER_SHOOTDELAY = 15
-const BULLET_SPEED = 6;
+const PLAYER_SHOOTDELAY = 100;
+const BULLET_SPEED = 3;
 const BULLET_SIZE = 4;
 
 const EXHAUST_SIZE = 3;
@@ -56,6 +56,16 @@ tex_alien5.src = "alien5.png";
 let tex_heart1 = new Image();
 tex_heart1.src = "heart1.png";
 
+const startAudio = new Audio('bgmusic.mp3');
+startAudio.volume = 0.2;
+const bulletSound = new Audio('3.mp3');
+bulletSound.volume = 0.4;
+const alienBulletSound = new Audio('2.mp3')
+alienBulletSound.volume = 0.4;
+const hitPlayer = new Audio('explode1.mp3')
+const hitTarget = new Audio('explode2.mp3')
+hitTarget.volume = 0.4;
+const destroyPlayerSound = new Audio('explode.m4a')
 //создаем массив волн врагов
 let waves = [
     [1, 1],
@@ -91,7 +101,7 @@ let alienSprites = [tex_alien1, tex_alien2, tex_alien3, tex_alien4, tex_alien5];
 let alienHealths = [4, 3, 2, 1, 10];
 let alienSpeeds = [1.5, 1, 2, 3, 0.5];
 let alienSizes = [25, 40, 20, 20, 35];
-let alienBulletSpeeds = [2, 4, 0, 2.5, 1.5];
+let alienBulletSpeeds = [1, 3, 0, 2.5, 1.5];
 let alienValues = [100, 150, 50, 100, 300];
 let alienPatterns = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5];
 
@@ -177,6 +187,7 @@ function Player(x, y, sprite) {
                 if (bullets[i].speed < 0) {
                     if (Math.abs(this.pos.x - bullets[i].pos.x) < PLAYER_SIZE / 1.5 &&
                         Math.abs(this.pos.y - bullets[i].pos.y) < PLAYER_SIZE / 1.5) {
+                        hitPlayer.play();
                         this.health--;
                         bullets[i].destroy();
                     }
@@ -213,6 +224,7 @@ function Player(x, y, sprite) {
                 this.gunLoaded = 0;
             }
             if (this.health <= 0) {
+                destroyPlayerSound.play();
                 this.death();
             }
             if (this.hasControl) {
@@ -240,6 +252,8 @@ function Player(x, y, sprite) {
                 if (keysDown[this.shootKey] && this.gunLoaded == 0) {
                     bullets.push(new Bullet(this.pos.x, this.pos.y, BULLET_SPEED));
                     this.gunLoaded = PLAYER_SHOOTDELAY * this.actualBulletBoost;
+                    bulletSound.play();
+
                 }
             }
         }
@@ -263,6 +277,8 @@ function Player(x, y, sprite) {
 
         this.pos.x = (Math.random() * canvas.width / 2) + canvas.width / 4;
         this.pos.y = canvas.height;
+
+        // bulletSound.pause();
     }
 }
 //функция конструктор пуль
@@ -317,7 +333,7 @@ function Alien(x, y, _type) {
             if (bullets[i].speed > 0) {
                 if (Math.abs(this.pos.x - bullets[i].pos.x) < this.size / 1.5 &&
                     Math.abs(this.pos.y - bullets[i].pos.y) < this.size / 1.5) {
-
+                    hitTarget.play();
                     this.health--;//уменьшаем здоровье
                     bullets[i].destroy();//чистим пули
                 }
@@ -354,6 +370,7 @@ function Alien(x, y, _type) {
             if (!this.firedShot) {
                 bullets.push(new Bullet(this.pos.x, this.pos.y, -this.bulletSpeed));
                 this.firedShot = true;
+                alienBulletSound.play();
             }
         }
 
@@ -425,10 +442,13 @@ function Exhaust(x, y) {
 }
 //заполняем массив звездами
 function setupGame() {
-    progressToGame = 0;
+    // progressToGame = 0;
     for (let i = 0; i < numDuts; i++) {
         dusts.push(new Dust());//в массив каждый раз добавляем
     }
+    // if (inMenu) {
+    //     startAudio.play();
+    // }
 }
 //обновляем все
 function update() {
@@ -580,15 +600,15 @@ function drawUI() {
     ctx.font = "20px Arial";
     ctx.fillText("Score " + score, canvas.width - 150, 35);
 
-    	//Hearts
-	for (let i = 0; i < player1.health; i++) {
-		ctx.drawImage(
-			tex_heart1,
-			i * (UI_HEART_SIZE + 10) + 100,
-			10,
-			UI_HEART_SIZE,
-			UI_HEART_SIZE);
-	}
+    //Hearts
+    for (let i = 0; i < player1.health; i++) {
+        ctx.drawImage(
+            tex_heart1,
+            i * (UI_HEART_SIZE + 10) + 100,
+            10,
+            UI_HEART_SIZE,
+            UI_HEART_SIZE);
+    }
 }
 function drawGame() {
     //пули
@@ -616,6 +636,8 @@ function endGame() {
     exhausts.splice(0);
     player1 = null;
     backMenu();
+    startAudio.pause();
+    // startAudio.load();
 }
 function readRules() {
     btnStart.remove();
@@ -627,6 +649,8 @@ function readRules() {
 }
 function startGame() {
     player1 = new Player(150, canvas.height + 50, tex_player1);
+    startAudio.load();
+    startAudio.play();
     curWave = START_WAVE - 1;
     score = 0;
     btnStart.remove();
