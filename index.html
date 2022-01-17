@@ -10,9 +10,10 @@
         * {
             padding: 0;
             margin: 0;
-            background: #000000;
+            /* background: #000000; */
         }
-        #wrap{
+
+        #wrap {
             margin-top: 10%;
             position: relative;
         }
@@ -37,7 +38,7 @@
             cursor: pointer;
             overflow: hidden;
             text-align: center;
-          
+
         }
 
         .rules {
@@ -59,6 +60,9 @@
             text-align: center;
             width: 500px;
         }
+        .ajax{
+            display: none;
+        }
     </style>
 </head>
 
@@ -68,8 +72,24 @@
     </div>
 
 
-    <script src="game.js">   
-    </script>
+    <div class="ajax" id='ajax'>
+        Ваше имя: <input type=text id='IName'><br />
+        Ваш возраст: <input type=text id='IAge'><br />
+        <input type=button value='Запомнить меня' onclick='storeInfo()'>
+
+
+        Имя строки: <input type=text id='Name' style='width: 184px' value='LOKTEV_TEST_INFO'><br />
+        <div style='margin: 5px 0 10px 0'>
+            <input type=button value='Показать сохранённое содержимое строки' onclick='Read()'>
+        </div>
+        <b>Сохранённое содержимое строки:</b>
+        <div style='margin-top: 10px' id='Value'></div>
+    </div>
+
+
+    <script src="game.js"></script>
+    <script src="ajax.js"></script>
+    <script src="http://fe.it-academy.by/JQ/jquery.js"></script>
 </body>
 
 </html>

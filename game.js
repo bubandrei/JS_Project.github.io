@@ -30,7 +30,7 @@ let inGame = false;// по умолчанию не в игре фолс
 let inMenu = true;// по умолчанию в меню тру
 let displayWave = 0;
 let score = 0;
-// let progressToGame = 0;
+
 let speed = PLAYER_SPEED;
 let numDuts = 10;
 let dusts = [];//пыль
@@ -124,7 +124,20 @@ btnRules.addEventListener('click', readRules);
 
 let btnScore = document.createElement('button');
 btnScore.innerHTML = "Score";
-btnScore.classList.add('btn', 'score')
+btnScore.classList.add('btn', 'score');
+btnScore.addEventListener('click', showScore);
+
+const showResult = document.getElementById('ajax');
+function showScore(){
+showResult.style.display = 'block';
+}
+
+
+
+
+
+
+
 
 wrap.append(btnStart);
 wrap.append(btnRules);
@@ -548,7 +561,8 @@ function updateWave() {
 
 setupGame();
 setInterval(update, 10);
-
+// let x = null;
+// console.log(x)
 function drawMenu() {
     let shakingX = (Math.random() * 3) - 1.5;
     let shakingY = (Math.random() * 3) - 1.5;
@@ -571,6 +585,9 @@ function drawMenu() {
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
     ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+
+    // x= score;
+    // console.log(x)
 
 }
 function drawUI() {
