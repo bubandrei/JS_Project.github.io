@@ -60,9 +60,21 @@
             text-align: center;
             width: 500px;
         }
-        .ajax{
-            display: none;
+
+        .resultStyle {
+            left: 20%;
+            position: absolute;
         }
+
+        .resultFlex {
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+        }
+
+        /* .ajax{
+            display: none;
+        } */
     </style>
 </head>
 
@@ -72,19 +84,21 @@
     </div>
 
 
-    <div class="ajax" id='ajax'>
-        Ваше имя: <input type=text id='IName'><br />
-        Ваш возраст: <input type=text id='IAge'><br />
-        <input type=button value='Запомнить меня' onclick='storeInfo()'>
+    <!-- <div class="ajax" id='ajax'> -->
+    <!-- Ваше имя: <input type=text id='IName'><br />
+        Ваш возраст: <input type=text id='IAge'><br /> -->
+    <!-- Name: <div id='IName'> </div> -->
+    <!-- Score: <div id='IAge'> </div> -->
+    <!-- <input type=button value='Запомнить меня' onclick='storeInfo()'> -->
 
 
-        Имя строки: <input type=text id='Name' style='width: 184px' value='LOKTEV_TEST_INFO'><br />
-        <div style='margin: 5px 0 10px 0'>
-            <input type=button value='Показать сохранённое содержимое строки' onclick='Read()'>
-        </div>
-        <b>Сохранённое содержимое строки:</b>
-        <div style='margin-top: 10px' id='Value'></div>
-    </div>
+    <!-- Имя строки: <input type=text id='Name' style='width: 184px' value='LOKTEV_TEST_INFO'><br /> -->
+    <!-- <div style='margin: 5px 0 10px 0'> -->
+    <!-- <input type=button value='Показать сохранённое содержимое строки' onclick='Read()'> -->
+    <!-- </div> -->
+    <!-- <b>Сохранённое содержимое строки:</b> -->
+    <!-- <div style='margin-top: 10px' id='Value'></div> -->
+    <!-- </div> -->
 
 
     <script src="game.js"></script>

@@ -6,8 +6,6 @@ const height = 500;
 canvas.width = width;
 canvas.height = height;
 
-
-
 const PLAYER_SIZE = 20;
 const PLAYER_SPEED = 1.5;
 const PLAYER_HEALTH = 3;
@@ -30,7 +28,6 @@ let inGame = false;// по умолчанию не в игре фолс
 let inMenu = true;// по умолчанию в меню тру
 let displayWave = 0;
 let score = 0;
-
 let speed = PLAYER_SPEED;
 let numDuts = 10;
 let dusts = [];//пыль
@@ -125,19 +122,9 @@ btnRules.addEventListener('click', readRules);
 let btnScore = document.createElement('button');
 btnScore.innerHTML = "Score";
 btnScore.classList.add('btn', 'score');
-btnScore.addEventListener('click', showScore);
+// btnScore.addEventListener('click', showScore);
 
 const showResult = document.getElementById('ajax');
-function showScore(){
-showResult.style.display = 'block';
-}
-
-
-
-
-
-
-
 
 wrap.append(btnStart);
 wrap.append(btnRules);
@@ -158,6 +145,9 @@ function backMenu() {
     wrap.append(btnScore);
     rule.remove();
     btnMainMenu.remove();
+    showList.remove();
+    inputName.remove();
+    saveName.remove();
 }
 
 //создаем звездное небо
@@ -499,6 +489,10 @@ function update() {
     }
     draw()
 }
+function showScore() {
+    showResult.style.display = 'block';
+}
+
 function draw() {
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -652,7 +646,8 @@ function endGame() {
     bullets.splice(0);
     exhausts.splice(0);
     player1 = null;
-    backMenu();
+    // backMenu();
+    saveResult();
     startAudio.pause();
     // startAudio.load();
 }
