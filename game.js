@@ -131,7 +131,7 @@ wrap.append(btnRules);
 wrap.append(btnScore);
 
 let rule = document.createElement('span');
-rule.innerHTML = "STAR WARS online is cool space shooter! Take control on spaceship and protect Earth from alien swarms! Upgrade spacecraft and win galaxy battle.";
+rule.innerHTML = "STAR WARS online is cool space shooter! Take control on spaceship and protect Earth from alien swarms!";
 rule.classList.add('rule')
 
 let btnMainMenu = document.createElement('button');

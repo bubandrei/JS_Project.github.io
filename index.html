@@ -13,9 +13,19 @@
             /* background: #000000; */
         }
 
-        #wrap {
+        /* #wrap {
             margin-top: 10%;
             position: relative;
+        } */
+        #wrap {
+            width: 250px;
+            height: 750px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
         }
 
         /* canvas {
@@ -30,7 +40,7 @@
             color: orange;
             /* background-color: white; */
             position: absolute;
-            left: 240px;
+            left: 190px;
             top: 20%;
             background-color: Transparent;
             background-repeat: no-repeat;
@@ -53,23 +63,28 @@
             color: orange;
             position: absolute;
             left: 50px;
-            top: 30%;
+            top: 20%;
             background: transparent;
             font-size: 20px;
             font-family: Arial;
             text-align: center;
-            width: 500px;
+            width: 400px;
+            display: flex;
         }
 
         .resultStyle {
-            left: 20%;
+            left: 60%;
             position: absolute;
+            top: 20%;
+            color: orange;
+            background-color: transparent;
         }
 
         .resultFlex {
             display: flex;
             justify-content: space-between;
             width: 200px;
+            background-color: transparent;
         }
 
         /* .ajax{
@@ -83,27 +98,10 @@
         <canvas id="canvas"></canvas>
     </div>
 
-
-    <!-- <div class="ajax" id='ajax'> -->
-    <!-- Ваше имя: <input type=text id='IName'><br />
-        Ваш возраст: <input type=text id='IAge'><br /> -->
-    <!-- Name: <div id='IName'> </div> -->
-    <!-- Score: <div id='IAge'> </div> -->
-    <!-- <input type=button value='Запомнить меня' onclick='storeInfo()'> -->
-
-
-    <!-- Имя строки: <input type=text id='Name' style='width: 184px' value='LOKTEV_TEST_INFO'><br /> -->
-    <!-- <div style='margin: 5px 0 10px 0'> -->
-    <!-- <input type=button value='Показать сохранённое содержимое строки' onclick='Read()'> -->
-    <!-- </div> -->
-    <!-- <b>Сохранённое содержимое строки:</b> -->
-    <!-- <div style='margin-top: 10px' id='Value'></div> -->
-    <!-- </div> -->
-
-
+    <script src="http://fe.it-academy.by/JQ/jquery.js"></script>
     <script src="game.js"></script>
     <script src="ajax.js"></script>
-    <script src="http://fe.it-academy.by/JQ/jquery.js"></script>
+
 </body>
 
 </html>
