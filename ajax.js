@@ -3,7 +3,10 @@ btnScore.addEventListener('click', showScore);//показываем резул�
 let arrResult = [];
 let inputName = document.createElement('input');
 inputName.innerHTML = 'Input your name';
-let saveName = document.createElement('button');
+const headerResult = document.createElement('div');
+headerResult.classList = 'headResult';
+headerResult.innerText = 'Result';
+const saveName = document.createElement('button');
 saveName.innerHTML = 'Save result';
 saveName.addEventListener('click', storeInfo)
 function saveResult() {
@@ -101,6 +104,7 @@ function ReadReady(ResultH) {
         btnStart.remove();
         btnRules.remove();
         btnScore.remove();
+        wrap.append(headerResult);
         wrap.append(btnMainMenu);
         wrap.append(showList)
     }

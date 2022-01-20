@@ -104,7 +104,7 @@ let alienPatterns = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5];
 
 
 let btnStart = document.createElement("button");
-btnStart.innerHTML = "Start Game";
+btnStart.innerHTML = "Start";
 btnStart.classList.add('btn')
 btnStart.addEventListener('click', function () {
     if (inMenu) {
@@ -148,6 +148,7 @@ function backMenu() {
     showList.remove();
     inputName.remove();
     saveName.remove();
+    headerResult.remove();
 }
 
 //создаем звездное небо
