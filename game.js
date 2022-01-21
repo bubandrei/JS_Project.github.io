@@ -136,7 +136,7 @@ rule.classList.add('rule')
 
 let btnMainMenu = document.createElement('button');
 btnMainMenu.innerHTML = "Return";
-btnMainMenu.classList.add('btn', 'score')
+btnMainMenu.classList.add('btn', 'returnFromRule')
 btnMainMenu.addEventListener('click', backMenu);
 function backMenu() {
     setupGame();
@@ -153,295 +153,306 @@ function backMenu() {
 
 //создаем звездное небо
 
-function Player(x, y, sprite) {
-    this.pos = { x, y };
-    this.sprite = sprite;
+class Player {
+    constructor(x, y, sprite) {
+        this.pos = { x, y };
+        this.sprite = sprite;
 
-    //         if (this.sprite == tex_player1) { this.upKey = 87; this.downKey = 83; this.leftKey = 65; this.rightKey = 68; this.shootKey = 87; this.playerNum = 1; }
-    // else { this.upKey = 38; this.downKey = 40; this.leftKey = 37; this.rightKey = 39; this.shootKey = 38; this.playerNum = 2; }
-    this.upKey = 87;
-    this.downKey = 83;
-    this.leftKey = 65;
-    this.rightKey = 68;
-    this.shootKey = 32;
-    this.playerNum = 1;
+        //         if (this.sprite == tex_player1) { this.upKey = 87; this.downKey = 83; this.leftKey = 65; this.rightKey = 68; this.shootKey = 87; this.playerNum = 1; }
+        // else { this.upKey = 38; this.downKey = 40; this.leftKey = 37; this.rightKey = 39; this.shootKey = 38; this.playerNum = 2; }
+        this.upKey = 87;
+        this.downKey = 83;
+        this.leftKey = 65;
+        this.rightKey = 68;
+        this.shootKey = 32;
+        this.playerNum = 1;
 
-    this.health = PLAYER_HEALTH;
-    this.die = false;
-    this.hasControl = false;
-    this.flyingOnScreen = true;
-    this.gunLoaded = 0;
+        this.health = PLAYER_HEALTH;
+        this.die = false;
+        this.hasControl = false;
+        this.flyingOnScreen = true;
+        this.gunLoaded = 0;
 
-    this.speedBoost = 0;
-    this.bulletBoost = 0;
-    // this.immortalBoost = 0;
-    this.actualSpeedBoost = 1;//можно задать скорость жестко или удалить вообще и из hasControl
+        this.speedBoost = 0;
+        this.bulletBoost = 0;
+        // this.immortalBoost = 0;
+        this.actualSpeedBoost = 1; //можно задать скорость жестко или удалить вообще и из hasControl
 
-    this.update = function () {
-        exhausts.push(new Exhaust(this.pos.x, this.pos.y + 10));
-        if (this.flyingOnScreen) {
-            this.pos.y -= 1;
-            // this.immortalBoost = 55;
-            if (this.pos.y <= canvas.height - 100) {
-                this.hasControl = true;
-                this.flyingOnScreen = false;
-            }
-        } else {
-            for (let i = 0; i < bullets.length; i++) {//попадание пули
-                if (bullets[i].speed < 0) {
-                    if (Math.abs(this.pos.x - bullets[i].pos.x) < PLAYER_SIZE / 1.5 &&
-                        Math.abs(this.pos.y - bullets[i].pos.y) < PLAYER_SIZE / 1.5) {
-                        hitPlayer.play();
+        this.update = function () {
+            exhausts.push(new Exhaust(this.pos.x, this.pos.y + 10));
+            if (this.flyingOnScreen) {
+                this.pos.y -= 1;
+                // this.immortalBoost = 55;
+                if (this.pos.y <= canvas.height - 100) {
+                    this.hasControl = true;
+                    this.flyingOnScreen = false;
+                }
+            } else {
+                for (let i = 0; i < bullets.length; i++) { //попадание пули
+                    if (bullets[i].speed < 0) {
+                        if (Math.abs(this.pos.x - bullets[i].pos.x) < PLAYER_SIZE / 1.5 &&
+                            Math.abs(this.pos.y - bullets[i].pos.y) < PLAYER_SIZE / 1.5) {
+                            hitPlayer.play();
+                            this.health--;
+                            bullets[i].destroy();
+                        }
+                    }
+                }
+                // столкновение с пришельцем
+                for (let i = 0; i < aliens.length; i++) {
+                    if (Math.abs(this.pos.x - aliens[i].pos.x) < (PLAYER_SIZE + aliens[i].size) / 2 &&
+                        Math.abs(this.pos.y - aliens[i].pos.y) < (PLAYER_SIZE + aliens[i].size) / 2) {
                         this.health--;
-                        bullets[i].destroy();
+                        aliens[i].destroy();
+                    }
+                }
+                //границ слева по х
+                if (this.pos.x < PLAYER_SIZE) {
+                    this.pos.x = PLAYER_SIZE;
+                }
+                //граница справа по х
+                if (this.pos.x + PLAYER_SIZE > canvas.width) {
+                    this.pos.x = canvas.width - PLAYER_SIZE;
+                }
+                //граница по y низ
+                if (this.pos.y > canvas.height - 10 - PLAYER_SIZE) {
+                    this.pos.y = canvas.height - 10 - PLAYER_SIZE;
+                }
+                //граница по y вверх
+                if (this.pos.y < PLAYER_SIZE + 55) {
+                    this.pos.y = PLAYER_SIZE + 55;
+                }
+                //пули
+                if (this.gunLoaded > 0) {
+                    this.gunLoaded--;
+                } else {
+                    this.gunLoaded = 0;
+                }
+                if (this.health <= 0) {
+                    destroyPlayerSound.play();
+                    this.death();
+                }
+                if (this.hasControl) {
+                    // Apply powerup effects// изменение скорости при получении улучшения
+                    // if (this.speedBoost > 0) {
+                    //     this.actualSpeedBoost = 1.75;
+                    // } else {
+                    //     this.actualSpeedBoost = 1;
+                    // }
+                    if (this.bulletBoost > 0)
+                        this.actualBulletBoost = 0.5;
+                    else
+                        this.actualBulletBoost = 1;
+                    // передвижение
+                    if (keysDown[this.upKey]) {
+                        this.pos.y -= PLAYER_SPEED * this.actualSpeedBoost;
+                    } else if (keysDown[this.downKey]) {
+                        this.pos.y += PLAYER_SPEED * this.actualSpeedBoost;
+                    }
+                    if (keysDown[this.leftKey]) {
+                        this.pos.x -= PLAYER_SPEED * this.actualSpeedBoost;
+                    }
+                    if (keysDown[this.rightKey]) {
+                        this.pos.x += PLAYER_SPEED * this.actualSpeedBoost;
+                    }
+                    if (keysDown[this.shootKey] && this.gunLoaded == 0) {
+                        bullets.push(new Bullet(this.pos.x, this.pos.y, BULLET_SPEED));
+                        this.gunLoaded = PLAYER_SHOOTDELAY * this.actualBulletBoost;
+                        bulletSound.play();
+
                     }
                 }
             }
-            // столкновение с пришельцем
-            for (let i = 0; i < aliens.length; i++) {
-                if (Math.abs(this.pos.x - aliens[i].pos.x) < (PLAYER_SIZE + aliens[i].size) / 2 &&
-                    Math.abs(this.pos.y - aliens[i].pos.y) < (PLAYER_SIZE + aliens[i].size) / 2) {
-                    this.health--;
-                    aliens[i].destroy();
-                }
-            }
-            //границ слева по х
-            if (this.pos.x < PLAYER_SIZE) {
-                this.pos.x = PLAYER_SIZE;
-            }
-            //граница справа по х
-            if (this.pos.x + PLAYER_SIZE > canvas.width) {
-                this.pos.x = canvas.width - PLAYER_SIZE;
-            }
-            //граница по y низ
-            if (this.pos.y > canvas.height - 10 - PLAYER_SIZE) {
-                this.pos.y = canvas.height - 10 - PLAYER_SIZE;
-            }
-            //граница по y вверх
-            if (this.pos.y < PLAYER_SIZE + 55) {
-                this.pos.y = PLAYER_SIZE + 55;
-            }
-            //пули
-            if (this.gunLoaded > 0) {
-                this.gunLoaded--;
-            } else {
-                this.gunLoaded = 0;
-            }
-            if (this.health <= 0) {
-                destroyPlayerSound.play();
-                this.death();
-            }
-            if (this.hasControl) {
-                // Apply powerup effects// изменение скорости при получении улучшения
-                // if (this.speedBoost > 0) {
-                //     this.actualSpeedBoost = 1.75;
-                // } else {
-                //     this.actualSpeedBoost = 1;
-                // }
+        };
+        this.draw = function () {
+            // if (this.alive) {
+            ctx.drawImage(
+                this.sprite,
+                this.pos.x - PLAYER_SIZE / 2,
+                this.pos.y - PLAYER_SIZE / 2,
+                PLAYER_SIZE,
+                PLAYER_SIZE);
+            // }
+        };
+        this.death = function () {
+            // this.alive = false;
+            this.die = true;
+            this.hasControl = false;
+            this.speedBoost = 0;
+            this.bulletBoost = 0;
 
-                if (this.bulletBoost > 0) this.actualBulletBoost = 0.5;
-                else this.actualBulletBoost = 1;
-                // передвижение
-                if (keysDown[this.upKey]) {
-                    this.pos.y -= PLAYER_SPEED * this.actualSpeedBoost;
-                } else if (keysDown[this.downKey]) {
-                    this.pos.y += PLAYER_SPEED * this.actualSpeedBoost;
-                }
-                if (keysDown[this.leftKey]) {
-                    this.pos.x -= PLAYER_SPEED * this.actualSpeedBoost;
-                }
-                if (keysDown[this.rightKey]) {
-                    this.pos.x += PLAYER_SPEED * this.actualSpeedBoost;
-                }
-                if (keysDown[this.shootKey] && this.gunLoaded == 0) {
-                    bullets.push(new Bullet(this.pos.x, this.pos.y, BULLET_SPEED));
-                    this.gunLoaded = PLAYER_SHOOTDELAY * this.actualBulletBoost;
-                    bulletSound.play();
+            this.pos.x = (Math.random() * canvas.width / 2) + canvas.width / 4;
+            this.pos.y = canvas.height;
 
-                }
-            }
-        }
-    }
-    this.draw = function () {
-        // if (this.alive) {
-        ctx.drawImage(
-            this.sprite,
-            this.pos.x - PLAYER_SIZE / 2,
-            this.pos.y - PLAYER_SIZE / 2,
-            PLAYER_SIZE,
-            PLAYER_SIZE);
-        // }
-    }
-    this.death = function () {
-        // this.alive = false;
-        this.die = true;
-        this.hasControl = false;
-        this.speedBoost = 0;
-        this.bulletBoost = 0;
-
-        this.pos.x = (Math.random() * canvas.width / 2) + canvas.width / 4;
-        this.pos.y = canvas.height;
-
-        // bulletSound.pause();
+            // bulletSound.pause();
+        };
     }
 }
 //функция конструктор пуль
-function Bullet(x, y, _speed) {
-    this.pos = { x, y };
-    this.speed = _speed;
-    //движение пули
-    this.update = function () {
-        this.pos.y -= this.speed;
-        if (this.pos.y < 55 || this.pos.y > canvas.height) {/////////условие уничтожения пули вверху и внизу
-            this.destroy()
-        }
-    }
-    //рисуем пули
-    this.draw = function () {
-        ctx.fillRect(
-            this.pos.x - BULLET_SIZE / 2,
-            this.pos.y - BULLET_SIZE / 2,
-            BULLET_SIZE, BULLET_SIZE);
-    }
-    //////уничтожаем пули
-    this.destroy = function () {
-        this.index = bullets.indexOf(this);
-        bullets.splice(this.index, 1);
+class Bullet {
+    constructor(x, y, _speed) {
+        this.pos = { x, y };
+        this.speed = _speed;
+        //движение пули
+        this.update = function () {
+            this.pos.y -= this.speed;
+            if (this.pos.y < 55 || this.pos.y > canvas.height) { /////////условие уничтожения пули вверху и внизу
+                this.destroy();
+            }
+        };
+        //рисуем пули
+        this.draw = function () {
+            ctx.fillRect(
+                this.pos.x - BULLET_SIZE / 2,
+                this.pos.y - BULLET_SIZE / 2,
+                BULLET_SIZE, BULLET_SIZE);
+        };
+        //////уничтожаем пули
+        this.destroy = function () {
+            this.index = bullets.indexOf(this);
+            bullets.splice(this.index, 1);
+        };
     }
 }
-function Alien(x, y, _type) {
-    this.pos = { x, y };
-    this.type = _type; // номер волны начинается с 1
+class Alien {
+    constructor(x, y, _type) {
+        this.pos = { x, y };
+        this.type = _type; // номер волны начинается с 1
 
-    if (this.type == 1) {//координаты начала движения врагов 1
-        this.pos.x = -((Math.random() * 250) + 20);
-        this.pos.y = (Math.random() * 100) + 100;
-        if (Math.random() > 0.5) {
-            this.pos.x = canvas.width - this.pos.x;//???????????????????????????????????????????????????????????????
+        if (this.type == 1) { //координаты начала движения врагов 1
+            this.pos.x = -((Math.random() * 250) + 20);
+            this.pos.y = (Math.random() * 100) + 100;
+            if (Math.random() > 0.5) {
+                this.pos.x = canvas.width - this.pos.x; //???????????????????????????????????????????????????????????????
+            }
         }
-    }
-    this.sprite = alienSprites[this.type];
-    this.health = alienHealths[this.type];
-    this.speed = alienSpeeds[this.type];
-    this.size = alienSizes[this.type];
-    this.bulletSpeed = alienBulletSpeeds[this.type];
-    this.pattern = alienPatterns[this.type];
+        this.sprite = alienSprites[this.type];
+        this.health = alienHealths[this.type];
+        this.speed = alienSpeeds[this.type];
+        this.size = alienSizes[this.type];
+        this.bulletSpeed = alienBulletSpeeds[this.type];
+        this.pattern = alienPatterns[this.type];
 
-    this.stepInPattern = Math.floor(Math.random() * this.pattern.length * 10);
-    this.dir = 1;//отталкивание врагов от стен
-    this.firedShot = false;
+        this.stepInPattern = Math.floor(Math.random() * this.pattern.length * 10);
+        this.dir = 1; //отталкивание врагов от стен
+        this.firedShot = false;
 
-    this.update = function () {
-        //попадание пули во врага
-        for (let i = 0; i < bullets.length; i++) {
-            if (bullets[i].speed > 0) {
-                if (Math.abs(this.pos.x - bullets[i].pos.x) < this.size / 1.5 &&
-                    Math.abs(this.pos.y - bullets[i].pos.y) < this.size / 1.5) {
-                    hitTarget.play();
-                    this.health--;//уменьшаем здоровье
-                    bullets[i].destroy();//чистим пули
+        this.update = function () {
+            //попадание пули во врага
+            for (let i = 0; i < bullets.length; i++) {
+                if (bullets[i].speed > 0) {
+                    if (Math.abs(this.pos.x - bullets[i].pos.x) < this.size / 1.5 &&
+                        Math.abs(this.pos.y - bullets[i].pos.y) < this.size / 1.5) {
+                        hitTarget.play();
+                        this.health--; //уменьшаем здоровье
+                        bullets[i].destroy(); //чистим пули
+                    }
                 }
             }
-        }
-        // Checks health
-        if (this.health <= 0) {
-            this.destroy()
-        };
-        // Вернуться к началу, если дошел до низа
-        if (this.pos.y > canvas.height - 15) {
-            this.pos.x = Math.random() * (canvas.width - 100) + 50;
-            this.pos.y = 55;
-        }
-
-        //Повторно увеличивает шаблон (меняется каждые 10 кадров)
-        this.stepInPattern++;
-        if (this.stepInPattern > this.pattern.length * 10) {
-            this.stepInPattern = 0;
-        }
-
-        // 1 пуля
-        if (this.stepInPattern % 10 == 0) {
-            this.firedShot = false;
-        }
-
-        if (this.pattern[Math.floor(this.stepInPattern / 10)] === 1) {
-            this.pos.y += this.speed;
-        } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 2) {
-            this.pos.x -= this.speed * this.dir;
-        } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 3) {
-            this.pos.x += this.speed * this.dir;
-        } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 4) {
-            if (!this.firedShot) {
-                bullets.push(new Bullet(this.pos.x, this.pos.y, -this.bulletSpeed));
-                this.firedShot = true;
-                alienBulletSound.play();
+            // Checks health
+            if (this.health <= 0) {
+                this.destroy();
+            };
+            // Вернуться к началу, если дошел до низа
+            if (this.pos.y > canvas.height - 15) {
+                this.pos.x = Math.random() * (canvas.width - 100) + 50;
+                this.pos.y = 55;
             }
-        }
+
+            //Повторно увеличивает шаблон (меняется каждые 10 кадров)
+            this.stepInPattern++;
+            if (this.stepInPattern > this.pattern.length * 10) {
+                this.stepInPattern = 0;
+            }
+
+            // 1 пуля
+            if (this.stepInPattern % 10 == 0) {
+                this.firedShot = false;
+            }
+
+            if (this.pattern[Math.floor(this.stepInPattern / 10)] === 1) {
+                this.pos.y += this.speed;
+            } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 2) {
+                this.pos.x -= this.speed * this.dir;
+            } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 3) {
+                this.pos.x += this.speed * this.dir;
+            } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 4) {
+                if (!this.firedShot) {
+                    bullets.push(new Bullet(this.pos.x, this.pos.y, -this.bulletSpeed));
+                    this.firedShot = true;
+                    alienBulletSound.play();
+                }
+            }
 
 
-        // отталкивание врагов от стен
-        if (this.pos.x < this.size)
-            this.dir = -1;
-        if (this.pos.x > canvas.width - this.size)
-            this.dir = 1;
+            // отталкивание врагов от стен
+            if (this.pos.x < this.size)
+                this.dir = -1;
+            if (this.pos.x > canvas.width - this.size)
+                this.dir = 1;
+
+        };
+        // Draws to frame
+        this.draw = function () {
+            ctx.drawImage(
+                this.sprite,
+                this.pos.x - this.size / 2,
+                this.pos.y - this.size / 2 + 15,
+                this.size,
+                this.size);
+        };
+        this.destroy = function () {
+            score += alienValues[this.type];
+            this.index = aliens.indexOf(this);
+            aliens.splice(this.index, 1);
+        };
 
     }
-    // Draws to frame
-    this.draw = function () {
-        ctx.drawImage(
-            this.sprite,
-            this.pos.x - this.size / 2,
-            this.pos.y - this.size / 2 + 15,
-            this.size,
-            this.size);
-    }
-    this.destroy = function () {
-        score += alienValues[this.type];
-        this.index = aliens.indexOf(this);
-        aliens.splice(this.index, 1);
-    }
-
 }
 //функцмя звезды
-function Dust() {
-    this.pos = {
-        x: Math.floor(Math.random() * canvas.width),
-        y: Math.floor(Math.random() * canvas.height)
-    };
-    this.update = function () {
-        this.pos.y += speed;
-        if (this.pos.y > canvas.height + 10) {
-            this.pos.x = Math.floor(Math.random() * canvas.width);
-            this.pos.y = -10;
-        }
-    }
-    this.draw = function () {
-        ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
+class Dust {
+    constructor() {
+        this.pos = {
+            x: Math.floor(Math.random() * canvas.width),
+            y: Math.floor(Math.random() * canvas.height)
+        };
+        this.update = function () {
+            this.pos.y += speed;
+            if (this.pos.y > canvas.height + 10) {
+                this.pos.x = Math.floor(Math.random() * canvas.width);
+                this.pos.y = -10;
+            }
+        };
+        this.draw = function () {
+            ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
+        };
     }
 }
 
-function Exhaust(x, y) {
-    this.pos = { x: x + Math.floor(Math.random() * 8) - 4, y };
-    this.lifetime = Math.floor(Math.random() * 30);
+class Exhaust {
+    constructor(x, y) {
+        this.pos = { x: x + Math.floor(Math.random() * 8) - 4, y };
+        this.lifetime = Math.floor(Math.random() * 30);
 
-    this.update = function () {
-        //движение
-        this.pos.x += (Math.random() * 2) - 1;
-        this.pos.y += speed;
+        this.update = function () {
+            //движение
+            this.pos.x += (Math.random() * 2) - 1;
+            this.pos.y += speed;
 
-        this.lifetime--;
-        if (this.lifetime <= 0) {
-            this.index = exhausts.indexOf(this);
-            exhausts.splice(this.index, 1);
-        }
+            this.lifetime--;
+            if (this.lifetime <= 0) {
+                this.index = exhausts.indexOf(this);
+                exhausts.splice(this.index, 1);
+            }
 
-    }
-    this.draw = function () {
-        ctx.fillRect(
-            this.pos.x - EXHAUST_SIZE / 2,
-            this.pos.y - EXHAUST_SIZE / 2,
-            EXHAUST_SIZE, EXHAUST_SIZE);
+        };
+        this.draw = function () {
+            ctx.fillRect(
+                this.pos.x - EXHAUST_SIZE / 2,
+                this.pos.y - EXHAUST_SIZE / 2,
+                EXHAUST_SIZE, EXHAUST_SIZE);
 
+        };
     }
 }
 //заполняем массив звездами
@@ -556,8 +567,7 @@ function updateWave() {
 
 setupGame();
 setInterval(update, 10);
-// let x = null;
-// console.log(x)
+
 function drawMenu() {
     let shakingX = (Math.random() * 3) - 1.5;
     let shakingY = (Math.random() * 3) - 1.5;
@@ -580,9 +590,6 @@ function drawMenu() {
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
     ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
-
-    // x= score;
-    // console.log(x)
 
 }
 function drawUI() {
