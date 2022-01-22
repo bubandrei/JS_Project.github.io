@@ -39,30 +39,30 @@ let startWave = false;//начинаем с неволны
 let enemies = []; //создаем массив для врагов
 
 let spritePlayer = new Image();
-spritePlayer.src = "player1.png";
+spritePlayer.src = "assets/img/player.png";
 let enemies1 = new Image();
-enemies1.src = "alien1.png";
+enemies1.src = "assets/img/enemies1.png";
 let enemies2 = new Image();
-enemies2.src = "alien2.png";
+enemies2.src = "assets/img/enemies2.png";
 let enemies3 = new Image();
-enemies3.src = "alien3.png";
+enemies3.src = "assets/img/enemies3.png";
 let enemies4 = new Image();
-enemies4.src = "alien4.png";
+enemies4.src = "assets/img/enemies4.png";
 let enemies5 = new Image();
-enemies5.src = "alien5.png";
+enemies5.src = "assets/img/enemies5.png";
 let heart = new Image();
-heart.src = "heart1.png";
+heart.src = "assets/img/heart.png";
 
-const startAudio = new Audio('bgmusic.mp3');
+const startAudio = new Audio('assets/sound/bgmusic.mp3');
 startAudio.volume = 0.2;
-const bulletSound = new Audio('3.mp3');
+const bulletSound = new Audio('assets/sound/3.mp3');
 bulletSound.volume = 0.4;
-const alienBulletSound = new Audio('2.mp3')
+const alienBulletSound = new Audio('assets/sound/2.mp3')
 alienBulletSound.volume = 0.4;
-const hitPlayer = new Audio('explode1.mp3')
-const hitTarget = new Audio('explode2.mp3')
+const hitPlayer = new Audio('assets/sound/explode1.mp3')
+const hitTarget = new Audio('assets/sound/explode2.mp3')
 hitTarget.volume = 0.4;
-const destroyPlayerSound = new Audio('explode.m4a')
+const destroyPlayerSound = new Audio('assets/sound/explode.m4a')
 //создаем массив волн врагов
 let waves = [
     [1, 1, 0, 0],
