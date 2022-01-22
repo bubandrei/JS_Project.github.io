@@ -6,6 +6,27 @@ const height = 500;
 canvas.width = width;
 canvas.height = height;
 
+window.addEventListener('resize', resizeCanvas)
+function resizeCanvas() {
+    if (canvas.width > window.innerWidth) {
+        canvas.width = window.innerWidth
+        console.log(canvas.width)
+    } else {
+        canvas.width = width;
+    }
+    if (canvas.height > window.innerHeight) {
+        canvas.height = window.innerHeight
+    } else {
+        canvas.height = height;
+    }
+}
+
+
+// o
+// t
+// y
+
+
 const playerSize = 20;
 const playerSpeed = 1.5;
 const playerHealth = 3;
