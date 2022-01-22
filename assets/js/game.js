@@ -273,6 +273,7 @@ function updateWave() {
                 Math.floor(Math.random() * 5)));//двумерный массив
         }
     }
+}
 
     function drawMenu() {
         let shakingX = (Math.random() * 3) - 1.5;
