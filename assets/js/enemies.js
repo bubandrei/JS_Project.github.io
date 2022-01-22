@@ -42,18 +42,15 @@ class Enemie {
                 this.pos.x = Math.random() * (canvas.width - 100) + 50;
                 this.pos.y = 55;
             }
-
             //Повторно увеличивает шаблон (меняется каждые 10 кадров)
             this.stepInPattern++;
             if (this.stepInPattern > this.pattern.length * 10) {
                 this.stepInPattern = 0;
             }
-
             // 1 пуля
             if (this.stepInPattern % 10 == 0) {
                 this.shoot = false;
             }
-
             if (this.pattern[Math.floor(this.stepInPattern / 10)] === 1) {
                 this.pos.y += this.speed;
             } else if (this.pattern[Math.floor(this.stepInPattern / 10)] === 2) {
@@ -67,14 +64,11 @@ class Enemie {
                     alienBulletSound.play();
                 }
             }
-
-
             // отталкивание врагов от стен
             if (this.pos.x < this.size)
                 this.changeDir = -1;
             if (this.pos.x > canvas.width - this.size)
                 this.changeDir = 1;
-
         };
         // Draws to frame
         this.draw = function () {

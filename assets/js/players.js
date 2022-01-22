@@ -24,7 +24,6 @@ class Player {
             smoke.push(new Smoke(this.pos.x, this.pos.y + 10));
             if (this.playerExitScreen) {
                 this.pos.y -= 1;
-                // this.immortalBoost = 55;
                 if (this.pos.y <= canvas.height - 100) {
                     this.control = true;
                     this.playerExitScreen = false;
@@ -75,16 +74,6 @@ class Player {
                     this.death();
                 }
                 if (this.control) {
-                    // Apply powerup effects// изменение скорости при получении улучшения
-                    // if (this.speedBoost > 0) {
-                    //     this.actualSpeedBoost = 1.75;
-                    // } else {
-                    //     this.actualSpeedBoost = 1;
-                    // }
-                    // if (this.bulletBoost > 0)
-                    //     this.actualBulletBoost = 0.5;
-                    // else
-                    //     this.actualBulletBoost = 1;
                     // передвижение
                     if (keysDown[this.upKey]) {
                         this.pos.y -= playerSpeed;
@@ -100,25 +89,20 @@ class Player {
                     if (keysDown[this.shootKey] && this.gunLoaded == 0) {
                         bullets.push(new Bullet(this.pos.x, this.pos.y, shotSpeed));
                         this.gunLoaded = shotDelay;
-                        // this.gunLoaded = PLAYER_SHOOTDELAY * this.actualBulletBoost;
                         bulletSound.play();
-
                     }
                 }
             }
         };
         this.draw = function () {
-            // if (this.alive) {
             ctx.drawImage(
                 this.sprite,
                 this.pos.x - playerSize / 2,
                 this.pos.y - playerSize / 2,
                 playerSize,
                 playerSize);
-            // }
         };
         this.death = function () {
-            // this.alive = false;
             this.die = true;
             this.hasControl = false;
             this.speedBoost = 0;
@@ -126,8 +110,6 @@ class Player {
 
             this.pos.x = (Math.random() * canvas.width / 2) + canvas.width / 4;
             this.pos.y = canvas.height;
-
-            // bulletSound.pause();
         };
     }
 }

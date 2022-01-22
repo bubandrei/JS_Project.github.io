@@ -23,24 +23,6 @@ class Bullet {
         };
     }
 }
-// class Stars {
-//     constructor() {
-//         this.pos = {
-//             x: Math.floor(Math.random() * canvas.width),
-//             y: Math.floor(Math.random() * canvas.height)
-//         };
-//         this.update = function () {
-//             this.pos.y += speed;
-//             if (this.pos.y > canvas.height + 10) {
-//                 this.pos.x = Math.floor(Math.random() * canvas.width);
-//                 this.pos.y = -10;
-//             }
-//         };
-//         this.draw = function () {
-//             ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
-//         };
-//     }
-// }
 
 class Smoke {
     constructor(x, y) {
@@ -57,14 +39,12 @@ class Smoke {
                 this.index = smoke.indexOf(this);
                 smoke.splice(this.index, 1);
             }
-
         };
         this.draw = function () {
             ctx.fillRect(
                 this.pos.x - smokeSize / 2,
                 this.pos.y - smokeSize / 2,
                 smokeSize, smokeSize);
-
         };
     }
 }
