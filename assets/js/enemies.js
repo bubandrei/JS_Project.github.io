@@ -61,7 +61,7 @@ class Enemie {
                 if (!this.shoot) {
                     bullets.push(new Bullet(this.pos.x, this.pos.y, -this.bulletSpeed));
                     this.shoot = true;
-                    alienBulletSound.play();
+                    enemiesBulletSound.play();
                 }
             }
             // отталкивание врагов от стен

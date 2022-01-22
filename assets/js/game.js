@@ -6,40 +6,15 @@ const height = 500;
 canvas.width = width;
 canvas.height = height;
 
-window.addEventListener('resize', resizeCanvas)
-function resizeCanvas() {
-    if (canvas.width > window.innerWidth) {
-        canvas.width = window.innerWidth
-        console.log(canvas.width)
-    } else {
-        canvas.width = width;
-    }
-    if (canvas.height > window.innerHeight) {
-        canvas.height = window.innerHeight
-    } else {
-        canvas.height = height;
-    }
-}
-
-
-// o
-// t
-// y
-
-
-const playerSize = 20;
+const playerSize = 30;
 const playerSpeed = 1.5;
 const playerHealth = 3;
 const beginWave = 1;
-// const START_SPEED = 1;
-// const MAX_SPEED = 4;
 const shotDelay = 50;
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
 const heartSize = 30;
-// const UI_POWERUP_SIZE = 0.025;
-// const UI_POWERUP_ADJUST = 0.0125;
 
 let keysDown = [];
 let inGame = false;// по умолчанию не в игре фолс
@@ -57,35 +32,35 @@ let startWave = false;//начинаем с неволны
 let enemies = []; //создаем массив для врагов
 
 let spritePlayer = new Image();
-spritePlayer.src = "assets/img/player.png";
+spritePlayer.src = "assets/img/shuttle.png";
 let enemies1 = new Image();
-enemies1.src = "assets/img/enemies1.png";
+enemies1.src = "assets/img/enemy_1.png";
 let enemies2 = new Image();
-enemies2.src = "assets/img/enemies2.png";
+enemies2.src = "assets/img/enemy_2.png";
 let enemies3 = new Image();
-enemies3.src = "assets/img/enemies3.png";
+enemies3.src = "assets/img/enemy_3.png";
 let enemies4 = new Image();
-enemies4.src = "assets/img/enemies4.png";
+enemies4.src = "assets/img/enemy_4.png";
 let enemies5 = new Image();
-enemies5.src = "assets/img/enemies5.png";
+enemies5.src = "assets/img/enemy_5.png";
 let heart = new Image();
 heart.src = "assets/img/heart.png";
 
 const startAudio = new Audio('assets/sound/bgmusic.mp3');
-startAudio.volume = 0.2;
 const bulletSound = new Audio('assets/sound/3.mp3');
-bulletSound.volume = 0.4;
-const alienBulletSound = new Audio('assets/sound/2.mp3')
-alienBulletSound.volume = 0.4;
+const enemiesBulletSound = new Audio('assets/sound/2.mp3')
 const hitPlayer = new Audio('assets/sound/explode1.mp3')
 const hitTarget = new Audio('assets/sound/explode2.mp3')
-hitTarget.volume = 0.4;
 const destroyPlayerSound = new Audio('assets/sound/explode.m4a')
+startAudio.volume = 0.2;
+bulletSound.volume = 0.4;
+enemiesBulletSound.volume = 0.4;
+hitTarget.volume = 0.4;
 //создаем массив волн врагов
 let waves = [
-    [1, 1, 0, 0],
+    [1, 1, 0],
     [1, 1, 0, 0, 2, 2],
-    [2, 2, 2, 2, 2, 0, 0],
+    [2, 2, 2, 2, 1, 0, 0],
     [1, 0, 0, 2, 2, 3, 3],
     [1, 1, 0, 0, 2, 4, 4, 3, 3],
     [3, 3, 3, 3, 3, 3, 4, 2, 1],
@@ -256,7 +231,7 @@ function draw() {
     }
 
     //границы
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "orange";
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, 4);
     ctx.fill();
@@ -287,136 +262,142 @@ function updateWave() {
                     Math.random() * (canvas.width - 100) + 50,
                     55,
                     waves[currentWave - 1][i]));//двумерный массив
-
             }
         }
-    }
-}
-
-function drawMenu() {
-    let shakingX = (Math.random() * 3) - 1.5;
-    let shakingY = (Math.random() * 3) - 1.5;
-    ctx.fillStyle = "orange";
-    ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
-    ctx.fillStyle = "orange";
-    ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 100 + shakingY);
-
-    ctx.beginPath();
-    ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
-    ctx.fillStyle = "darkred";
-    ctx.fill();
-    ctx.beginPath();
-    ctx.rect((canvas.width / 2 - 135) + shakingX, 115 + shakingY, 265, 10);
-    ctx.fillStyle = "orange";
-    ctx.fill();
-
-    ctx.fillStyle = "orange";
-    ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
-
-}
-function drawUI() {
-    ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, 55);
-    ctx.fillStyle = "grey";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.rect(0, canvas.height - 20, canvas.width, 0);
-    ctx.fillStyle = "grey";
-    ctx.fill();
-
-    // номр волны
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText("Wave " + currentWave, 10, 35);
-
-    ctx.fillStyle = "white";
-    ctx.font = "35px Arial";
-    if (displayWave > 0) {
-        displayWave--;
-        ctx.fillText("Wave " + currentWave, canvas.width / 2.5, canvas.height / 2);
+    } else {
+        for (let i = 0; i < currentWave; i++) { //пока i меньше длинны подмассива(кол-во врагов
+            // в волне) 
+            enemies.push(new Enemie(
+                Math.random() * (canvas.width - 100) + 50,
+                55,
+                Math.floor(Math.random() * 5)));//двумерный массив
+        }
     }
 
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score " + score, canvas.width - 150, 35);
+    function drawMenu() {
+        let shakingX = (Math.random() * 3) - 1.5;
+        let shakingY = (Math.random() * 3) - 1.5;
+        ctx.fillStyle = "orange";
+        ctx.font = "50px Arial";
+        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+        ctx.fillStyle = "orange";
+        ctx.font = "50px Arial";
+        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 100 + shakingY);
 
-    //жизнь
-    for (let i = 0; i < player.health; i++) {
-        ctx.drawImage(
-            heart,
-            i * (heartSize + 10) + 100,
-            10,
-            heartSize,
-            heartSize);
+        ctx.beginPath();
+        ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
+        ctx.fillStyle = "darkred";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.rect((canvas.width / 2 - 135) + shakingX, 115 + shakingY, 265, 10);
+        ctx.fillStyle = "orange";
+        ctx.fill();
+
+        ctx.fillStyle = "orange";
+        ctx.font = "50px Arial";
+        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+
     }
-}
-function drawGame() {
-    //пули
-    ctx.fillStyle = "white";
-    for (let i = 0; i < bullets.length; i++) {
-        bullets[i].draw()
+    function drawUI() {
+        ctx.beginPath();
+        ctx.rect(0, 0, canvas.width, 55);
+        ctx.fillStyle = "orange";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.rect(0, canvas.height - 20, canvas.width, 0);
+        ctx.fillStyle = "grey";
+        ctx.fill();
+
+        // номр волны
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText("Wave " + currentWave, 10, 35);
+
+        ctx.fillStyle = "white";
+        ctx.font = "35px Arial";
+        if (displayWave > 0) {
+            displayWave--;
+            ctx.fillText("Wave " + currentWave, canvas.width / 2.5, canvas.height / 2);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText("Score " + score, canvas.width - 150, 35);
+
+        //жизнь
+        for (let i = 0; i < player.health; i++) {
+            ctx.drawImage(
+                heart,
+                i * (heartSize + 10) + 100,
+                10,
+                heartSize,
+                heartSize);
+        }
     }
-    //выхлоп
-    ctx.fillStyle = 'white';
-    for (let i = 0; i < smoke.length; i++) {
-        smoke[i].draw();
+    function drawGame() {
+        //пули
+        ctx.fillStyle = "white";
+        for (let i = 0; i < bullets.length; i++) {
+            bullets[i].draw()
+        }
+        //выхлоп
+        ctx.fillStyle = 'white';
+        for (let i = 0; i < smoke.length; i++) {
+            smoke[i].draw();
+        }
+        //враги
+        for (let i = 0; i < enemies.length; i++) {
+            enemies[i].draw();
+        }
+
+        player.draw();
     }
-    //враги
-    for (let i = 0; i < enemies.length; i++) {
-        enemies[i].draw();
+    function endGame() {
+        inGame = false;
+        inMenu = true;
+        enemies.splice(0);
+        bullets.splice(0);
+        smoke.splice(0);
+        player = null;
+        // backMenu();
+        saveResult();
+        startAudio.pause();
+        // startAudio.load();
     }
+    function readRules() {
+        btnStart.remove();
+        btnRules.remove();
+        btnScore.remove();
+        wrap.append(rule);
+        wrap.append(btnMainMenu);
 
-    player.draw();
-}
-function endGame() {
-    inGame = false;
-    inMenu = true;
-    enemies.splice(0);
-    bullets.splice(0);
-    smoke.splice(0);
-    player = null;
-    // backMenu();
-    saveResult();
-    startAudio.pause();
-    // startAudio.load();
-}
-function readRules() {
-    btnStart.remove();
-    btnRules.remove();
-    btnScore.remove();
-    wrap.append(rule);
-    wrap.append(btnMainMenu);
+    }
+    function startGame() {
+        player = new Player(150, canvas.height + 50, spritePlayer);
+        startAudio.load();
+        startAudio.play();
+        currentWave = beginWave - 1;
+        score = 0;
+        btnStart.remove();
+        btnRules.remove();
+        btnScore.remove();
+    }
+    setupGame();
+    setInterval(update, 10);
+    document.addEventListener("keydown", function (e) {
+        if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
+            e.preventDefault();
 
-}
-function startGame() {
-    player = new Player(150, canvas.height + 50, spritePlayer);
-    startAudio.load();
-    startAudio.play();
-    currentWave = beginWave - 1;
-    score = 0;
-    btnStart.remove();
-    btnRules.remove();
-    btnScore.remove();
-}
-setupGame();
-setInterval(update, 10);
-document.addEventListener("keydown", function (e) {
-    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
-        e.preventDefault();
+        // If in menu
+        // if (inMenu) {
+        //     startGame();
+        //     inGame = true;
+        // }
 
-    // If in menu
-    // if (inMenu) {
-    //     startGame();
-    //     inGame = true;
-    // }
+        keysDown[e.keyCode] = true;
+    });
 
-    keysDown[e.keyCode] = true;
-});
-
-document.addEventListener("keyup", function (e) {
-    keysDown[e.keyCode] = false;
-});
+    document.addEventListener("keyup", function (e) {
+        keysDown[e.keyCode] = false;
+    });

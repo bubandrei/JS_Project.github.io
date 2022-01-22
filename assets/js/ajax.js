@@ -2,12 +2,15 @@
 btnScore.addEventListener('click', showScore);//показываем результат на кнопке Score в меню
 let arrResult = [];
 let inputName = document.createElement('input');
-inputName.innerHTML = 'Input your name';
+// inputName.innerHTML = 'Input your name';
+inputName.classList = 'inputName';
+inputName.setAttribute('placeholder','Input your name')
 const headerResult = document.createElement('div');
 headerResult.classList = 'headResult';
 headerResult.innerText = 'Result';
 const saveName = document.createElement('button');
 saveName.innerHTML = 'Save result';
+saveName.classList = 'btnSave';
 saveName.addEventListener('click', storeInfo)
 function saveResult() {
     wrap.append(inputName);
