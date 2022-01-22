@@ -6,131 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        * {
-            padding: 0;
-            margin: 0;
-            background: #000000;
-        }
-
-        /* #wrap {
-            margin-top: 10%;
-            position: relative;
-        } */
-        #wrap {
-            width: 250px;
-            height: 250px;
-            position: absolute;
-            top: 25%;
-            left: 40%;
-            margin: -125px 0 0 -125px;
-        }
-
-        /* canvas {
-            display: block;
-            margin: 0 auto;
-        } */
-
-        .btn {
-            width: 140px;
-            /* height: 250px; */
-            font-size: 40px;
-            color: orange;
-            /* background-color: white; */
-            position: absolute;
-            left: 180px;
-            top: 60%;
-            background-color: Transparent;
-            background-repeat: no-repeat;
-            border: none;
-            cursor: pointer;
-            overflow: hidden;
-            text-align: center;
-
-        }
-
-        .rules {
-            top: 80%;
-        }
-
-        .score {
-            top: 100%;
-        }
-
-        .rule {
-            color: orange;
-            position: absolute;
-            left: 50px;
-            top: 60%;
-            background: transparent;
-            font-size: 20px;
-            font-family: Arial;
-            text-align: center;
-            width: 400px;
-            display: flex;
-        }
-        .returnFromRule{
-            top: 150%;
-        }
-
-        .resultStyle {
-            left: 60%;
-            position: absolute;
-            top: 70%;
-            color: orange;
-            background-color: transparent;
-        }
-
-        .resultFlex {
-            display: flex;
-            justify-content: space-between;
-            width: 200px;
-            background-color: transparent;
-        }
-
-        .headResult {
-            position: absolute;
-            color: orange;
-            background-color: transparent;
-            top: 55%;
-            left: 83%;
-            font-size: 30px;
-        }
-
-        /* .ajax{
-            display: none;
-        } */
-        @media screen and (max-width: 700px) {
-            * {
-            padding: 0;
-            margin: 0;
-            background: white;
-        }
-        #wrap {
-            width: 250px;
-            height: 250px;
-            position: absolute;
-            top: 25%;
-            left: 30%;
-            margin: -125px 0 0 -125px;
-        }
-}
-@media screen and (max-width: 550px) {
-            * {
-            padding: 0;
-            margin: 0;
-            background: black;
-        }
-        #wrap {
-            width: 250px;
-            height: 250px;
-            position: absolute;
-            top: 25%;
-            left: 25%;
-            margin: -125px 0 0 -125px;
-        }
-}
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -140,6 +16,9 @@
 
     <script src="https://fe.it-academy.by/JQ/jquery.js"></script>
     <script src="game.js"></script>
+    <script src="players.js"></script>
+    <script src="enemies.js"></script>
+    <script src="componentsGame.js"></script>
     <script src="ajax.js"></script>
 
 </body>
