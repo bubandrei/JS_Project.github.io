@@ -80,7 +80,7 @@
     width: 180px;
     /* height: 250px; */
     font-size: 30px;
-    color: orange;
+    color: red;
     /* background-color: white; */
     position: absolute;
     left: 160px;
@@ -91,6 +91,10 @@
     cursor: pointer;
     overflow: hidden;
     text-align: center;
+    /* display: none; */
+}
+.btnSaveShow{
+    display: inline;
 }
 .resultStyle {
     left: 60%;
