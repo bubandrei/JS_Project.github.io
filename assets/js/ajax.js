@@ -13,6 +13,11 @@ saveName.innerHTML = 'Save result';
 saveName.classList = 'btnSave';
 saveName.addEventListener('click', storeInfo)
 function saveResult() {
+
+    ctx.fillStyle = "orange";
+    ctx.font = "20px Arial"; 
+    ctx.fillText("Game ver", 210, 235);
+
     wrap.append(inputName);
     wrap.append(saveName);
 }
