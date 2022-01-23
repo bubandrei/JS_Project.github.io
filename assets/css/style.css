@@ -67,7 +67,7 @@
     position: absolute;
     color: orange;
     background-color: transparent;
-    top: 70%;
+    top: 110%;
     left: 28%;
     font-size: 30px;
     text-align: center;
@@ -84,7 +84,7 @@
     /* background-color: white; */
     position: absolute;
     left: 160px;
-    top: 92%;
+    top: 135%;
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
@@ -114,6 +114,16 @@
     top: 55%;
     left: 83%;
     font-size: 30px;
+}
+.gameover{
+    position: absolute;
+    color: red;
+    background-color: transparent;
+    top: 65%;
+    left: 44%;
+    font-size: 55px;
+    width: 300px;
+    font-family: arial;
 }
 
 @media screen and (max-width: 700px) {

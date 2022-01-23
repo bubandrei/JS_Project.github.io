@@ -4,7 +4,11 @@ let arrResult = [];
 let inputName = document.createElement('input');
 // inputName.innerHTML = 'Input your name';
 inputName.classList = 'inputName';
-inputName.setAttribute('placeholder','Input your name')
+inputName.setAttribute('placeholder', 'Input your name');
+
+const gameover = document.createElement('div');
+gameover.innerText = 'Game Over';
+gameover.classList = 'gameover';
 const headerResult = document.createElement('div');
 headerResult.classList = 'headResult';
 headerResult.innerText = 'Result';
@@ -13,18 +17,15 @@ saveName.innerHTML = 'Save result';
 saveName.classList = 'btnSave';
 saveName.addEventListener('click', storeInfo)
 function saveResult() {
-
-    ctx.fillStyle = "orange";
-    ctx.font = "20px Arial"; 
-    ctx.fillText("Game ver", 210, 235);
-
+    inputName.value = '';
+    wrap.append(gameover);
     wrap.append(inputName);
     wrap.append(saveName);
 }
 let showList = document.createElement('div');
 showList.classList = "resultStyle";
 
-var ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
+const ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
 let updatePassword;
 let stringName = 'BUBELEV_TEST_INFO';
 
@@ -34,7 +35,7 @@ function storeInfo() {
     $.ajax({
         url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
         data: { f: 'LOCKGET', n: stringName, p: updatePassword },
-        success: lockGetReady, error: errorHandler
+        success: lockGetReady, error: ErrorHandler
     }
     );
     backMenu();
@@ -50,10 +51,13 @@ function lockGetReady(callresult) {
             score: score
         };
         arrResult.push(info)
+        if(arrResult.length > 10){
+            arrResult.splice(10)
+        }   
         $.ajax({
             url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
             data: { f: 'UPDATE', n: stringName, v: JSON.stringify(arrResult), p: updatePassword },
-            success: updateReady, error: errorHandler
+            success: updateReady, error: ErrorHandler
         }
         );
     }
@@ -102,7 +106,7 @@ function ReadReady(ResultH) {
         arrResult = JSON.parse(ResultH.result);
         function compareScores(A, B) {
             return B.score - A.score;
-        }
+        }  
         arrResult.sort(compareScores);
         function getFrom(V, I, A) {
             strName += `<div class = "resultFlex"><span>${V.name}</span><span>${V.score}</span></div>`;

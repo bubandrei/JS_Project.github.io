@@ -142,6 +142,7 @@ function backMenu() {
     inputName.remove();
     saveName.remove();
     headerResult.remove();
+    gameover.remove();
 }
 
 //класс звездное небо
