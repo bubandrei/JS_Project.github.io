@@ -35,6 +35,7 @@ class Enemie {
             }
             // Checks health
             if (this.health <= 0) {
+                hitTarget.play();
                 this.destroy();
             };
             // Вернуться к началу, если дошел до низа

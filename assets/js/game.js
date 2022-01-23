@@ -10,7 +10,7 @@ const playerSize = 30;
 const playerSpeed = 1.5;
 const playerHealth = 3;
 const beginWave = 1;
-const shotDelay = 50;
+const shotDelay = 100;
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
@@ -22,7 +22,7 @@ let inMenu = true;// по умолчанию в меню тру
 let displayWave = 0;
 let score = 0;
 let speed = playerSpeed;
-let numStars = 10;
+let numStars = 100;
 let stars = [];//пыль
 let bullets = [];//пули
 let smoke = [];//выхлоп от игрока
@@ -68,7 +68,7 @@ let waves = [
 ]
 
 
-// Alien Patterns (0 up, 1 down, 2 left, 3 right, 4 shoot, 5 delay)
+// 0 вврх, 1 виз, 2 лво, 3 право, 4 выстрл, 5 задркжа)
 let moveEnemies = [
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 4, 5, 1, 1, 1, 1
 ];
@@ -85,7 +85,7 @@ let moveEnemies5 = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2
 ];
 
-// Alien Types - 0 normal / 1 longranged / 2 kamakazi / 3 small fighter / 4 heavybomber
+// типы врагов
 //определяем все показатели врагов(здоровье, скорость, размеры, скорость стрельбы, очки, действие)
 let enemiesSprites = [enemies1, enemies2, enemies3, enemies4, enemies5];
 let enemiesHealths = [4, 3, 2, 1, 10];
@@ -110,12 +110,10 @@ const btnRules = document.createElement('button');
 btnRules.innerHTML = "Rules";
 btnRules.classList.add('btn', 'rules')
 btnRules.addEventListener('click', readRules);
-// btnRules.addEventListener('click', update)
 
 const btnScore = document.createElement('button');
 btnScore.innerHTML = "Score";
 btnScore.classList.add('btn', 'score');
-// btnScore.addEventListener('click', showScore);
 
 const showResult = document.getElementById('ajax');
 
@@ -146,7 +144,6 @@ function backMenu() {
 }
 
 //класс звездное небо
-
 class Stars {
     constructor() {
         this.pos = {
@@ -170,9 +167,9 @@ function setupGame() {
     for (let i = 0; i < numStars; i++) {
         stars.push(new Stars());//в массив каждый раз добавляем
     }
-    // if (inMenu) {
-    //     startAudio.play();
-    // }
+    if (inMenu) {
+        startAudio.play();
+    }
 }
 //обновляем все
 function update() {
@@ -193,7 +190,7 @@ function update() {
             inMenu = false;
         }
         player.update();
-        for (var i = 0; i < enemies.length; i++)
+        for (let i = 0; i < enemies.length; i++)
             enemies[i].update();
     } else {
     }
@@ -209,7 +206,6 @@ function update() {
 function showScore() {
     showResult.style.display = 'block';
 }
-
 function draw() {
     ctx.beginPath();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -218,7 +214,6 @@ function draw() {
     for (let i = 0; i < stars.length; i++) {
         stars[i].draw();
     }
-
     if (inMenu) {
         drawMenu();
     }
@@ -245,8 +240,6 @@ function draw() {
     ctx.beginPath();
     ctx.rect(canvas.width, 0, -4, canvas.height);
     ctx.fill();
-
-
 }
 function updateWave() {
     if (enemies.length == 0 && !inMenu) {//если врагов 0 и мы не в меню
@@ -275,8 +268,6 @@ function updateWave() {
         }
     }
 }
-
-
 function drawMenu() {
     let shakingX = (Math.random() * 3) - 1.5;
     let shakingY = (Math.random() * 3) - 1.5;
@@ -363,10 +354,8 @@ function endGame() {
     bullets.splice(0);
     smoke.splice(0);
     player = null;
-    // backMenu();
     saveResult();
     startAudio.pause();
-    // startAudio.load();
 }
 function readRules() {
     btnStart.remove();
@@ -374,7 +363,6 @@ function readRules() {
     btnScore.remove();
     wrap.append(rule);
     wrap.append(btnMainMenu);
-
 }
 function startGame() {
     player = new Player(150, canvas.height + 50, spritePlayer);
@@ -391,16 +379,28 @@ setInterval(update, 10);
 document.addEventListener("keydown", function (e) {
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
         e.preventDefault();
-
-    // If in menu
-    // if (inMenu) {
-    //     startGame();
-    //     inGame = true;
-    // }
-
     keysDown[e.keyCode] = true;
 });
-
 document.addEventListener("keyup", function (e) {
     keysDown[e.keyCode] = false;
 });
+
+
+
+let allowPrompt = true;
+window.onbeforeunload = WarnUser;
+    function WarnUser()
+    {
+       if(allowPrompt)
+       {
+          event.returnValue = "You have made changes. They will be lost if you continue.";
+       }
+       else
+       {
+          allowPrompt = true;
+       }
+    }
+    function NoPrompt()
+    {
+       allowPrompt = false;
+    }

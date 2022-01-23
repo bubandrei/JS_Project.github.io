@@ -3,11 +3,6 @@
     margin: 0;
     background: #000000;
 }
-
-/* #wrap {
-    margin-top: 10%;
-    position: relative;
-} */
 #wrap {
     width: 250px;
     height: 250px;
@@ -16,18 +11,10 @@
     left: 40%;
     margin: -125px 0 0 -125px;
 } 
-
-/* canvas {
-    display: block;
-    margin: 0 auto;
-} */
-
 .btn {
     width: 140px;
-    /* height: 250px; */
     font-size: 40px;
     color: orange;
-    /* background-color: white; */
     position: absolute;
     left: 180px;
     top: 60%;
@@ -37,17 +24,13 @@
     cursor: pointer;
     overflow: hidden;
     text-align: center;
-
 }
-
 .rules {
     top: 80%;
 }
-
 .score {
     top: 100%;
 }
-
 .rule {
     color: orange;
     position: absolute;
@@ -78,10 +61,8 @@
 }
 .btnSave{
     width: 180px;
-    /* height: 250px; */
     font-size: 30px;
     color: red;
-    /* background-color: white; */
     position: absolute;
     left: 160px;
     top: 135%;
@@ -91,7 +72,6 @@
     cursor: pointer;
     overflow: hidden;
     text-align: center;
-    /* display: none; */
 }
 .btnSaveShow{
     display: inline;
@@ -103,14 +83,12 @@
     color: orange;
     background-color: transparent;
 }
-
 .resultFlex {
     display: flex;
     justify-content: space-between;
     width: 200px;
     background-color: transparent;
 }
-
 .headResult {
     position: absolute;
     color: orange;
@@ -129,34 +107,15 @@
     width: 300px;
     font-family: arial;
 }
-
 @media screen and (max-width: 700px) {
-    /* * {
-    padding: 0;
-    margin: 0;
-    background: black;
-} */
 #wrap {
-    /* width: 250px;
-    height: 250px;
-    position: absolute; */
     top: 25%;
     left: 30%;
-    /* margin: -125px 0 0 -125px; */
 }
 }
 @media screen and (max-width: 550px) {
-    /* * {
-    padding: 0;
-    margin: 0;
-    background: black;
-} */
 #wrap {
-    /* width: 250px;
-    height: 250px;
-    position: absolute; */
     top: 25%;
     left: 25%;
-    /* margin: -125px 0 0 -125px; */
 }
 }
