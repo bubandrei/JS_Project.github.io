@@ -263,142 +263,143 @@ function updateWave() {
                     55,
                     waves[currentWave - 1][i]));//двумерный массив
             }
-        }
-    } else {
-        for (let i = 0; i < currentWave; i++) { //пока i меньше длинны подмассива(кол-во врагов
-            // в волне) 
-            enemies.push(new Enemie(
-                Math.random() * (canvas.width - 100) + 50,
-                55,
-                Math.floor(Math.random() * 5)));//двумерный массив
+        } else {
+            for (let i = 0; i < currentWave; i++) { //пока i меньше длинны подмассива(кол-во врагов
+                // в волне) 
+                enemies.push(new Enemie(
+                    Math.random() * (canvas.width - 100) + 50,
+                    55,
+                    Math.floor(Math.random() * 5)));//двумерный массив
+            }
         }
     }
 }
 
-    function drawMenu() {
-        let shakingX = (Math.random() * 3) - 1.5;
-        let shakingY = (Math.random() * 3) - 1.5;
-        ctx.fillStyle = "orange";
-        ctx.font = "50px Arial";
-        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
-        ctx.fillStyle = "orange";
-        ctx.font = "50px Arial";
-        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 100 + shakingY);
 
-        ctx.beginPath();
-        ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
-        ctx.fillStyle = "darkred";
-        ctx.fill();
-        ctx.beginPath();
-        ctx.rect((canvas.width / 2 - 135) + shakingX, 115 + shakingY, 265, 10);
-        ctx.fillStyle = "orange";
-        ctx.fill();
+function drawMenu() {
+    let shakingX = (Math.random() * 3) - 1.5;
+    let shakingY = (Math.random() * 3) - 1.5;
+    ctx.fillStyle = "orange";
+    ctx.font = "50px Arial";
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+    ctx.fillStyle = "orange";
+    ctx.font = "50px Arial";
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 100 + shakingY);
 
-        ctx.fillStyle = "orange";
-        ctx.font = "50px Arial";
-        ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+    ctx.beginPath();
+    ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
+    ctx.fillStyle = "darkred";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect((canvas.width / 2 - 135) + shakingX, 115 + shakingY, 265, 10);
+    ctx.fillStyle = "orange";
+    ctx.fill();
 
+    ctx.fillStyle = "orange";
+    ctx.font = "50px Arial";
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+
+}
+function drawUI() {
+    ctx.beginPath();
+    ctx.rect(0, 0, canvas.width, 55);
+    ctx.fillStyle = "orange";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.rect(0, canvas.height - 20, canvas.width, 0);
+    ctx.fillStyle = "grey";
+    ctx.fill();
+
+    // номр волны
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("Wave " + currentWave, 10, 35);
+
+    ctx.fillStyle = "white";
+    ctx.font = "35px Arial";
+    if (displayWave > 0) {
+        displayWave--;
+        ctx.fillText("Wave " + currentWave, canvas.width / 2.5, canvas.height / 2);
     }
-    function drawUI() {
-        ctx.beginPath();
-        ctx.rect(0, 0, canvas.width, 55);
-        ctx.fillStyle = "orange";
-        ctx.fill();
 
-        ctx.beginPath();
-        ctx.rect(0, canvas.height - 20, canvas.width, 0);
-        ctx.fillStyle = "grey";
-        ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("Score " + score, canvas.width - 150, 35);
 
-        // номр волны
-        ctx.fillStyle = "white";
-        ctx.font = "20px Arial";
-        ctx.fillText("Wave " + currentWave, 10, 35);
-
-        ctx.fillStyle = "white";
-        ctx.font = "35px Arial";
-        if (displayWave > 0) {
-            displayWave--;
-            ctx.fillText("Wave " + currentWave, canvas.width / 2.5, canvas.height / 2);
-        }
-
-        ctx.fillStyle = "white";
-        ctx.font = "20px Arial";
-        ctx.fillText("Score " + score, canvas.width - 150, 35);
-
-        //жизнь
-        for (let i = 0; i < player.health; i++) {
-            ctx.drawImage(
-                heart,
-                i * (heartSize + 10) + 100,
-                10,
-                heartSize,
-                heartSize);
-        }
+    //жизнь
+    for (let i = 0; i < player.health; i++) {
+        ctx.drawImage(
+            heart,
+            i * (heartSize + 10) + 100,
+            10,
+            heartSize,
+            heartSize);
     }
-    function drawGame() {
-        //пули
-        ctx.fillStyle = "white";
-        for (let i = 0; i < bullets.length; i++) {
-            bullets[i].draw()
-        }
-        //выхлоп
-        ctx.fillStyle = 'white';
-        for (let i = 0; i < smoke.length; i++) {
-            smoke[i].draw();
-        }
-        //враги
-        for (let i = 0; i < enemies.length; i++) {
-            enemies[i].draw();
-        }
-
-        player.draw();
+}
+function drawGame() {
+    //пули
+    ctx.fillStyle = "white";
+    for (let i = 0; i < bullets.length; i++) {
+        bullets[i].draw()
     }
-    function endGame() {
-        inGame = false;
-        inMenu = true;
-        enemies.splice(0);
-        bullets.splice(0);
-        smoke.splice(0);
-        player = null;
-        // backMenu();
-        saveResult();
-        startAudio.pause();
-        // startAudio.load();
+    //выхлоп
+    ctx.fillStyle = 'white';
+    for (let i = 0; i < smoke.length; i++) {
+        smoke[i].draw();
     }
-    function readRules() {
-        btnStart.remove();
-        btnRules.remove();
-        btnScore.remove();
-        wrap.append(rule);
-        wrap.append(btnMainMenu);
-
+    //враги
+    for (let i = 0; i < enemies.length; i++) {
+        enemies[i].draw();
     }
-    function startGame() {
-        player = new Player(150, canvas.height + 50, spritePlayer);
-        startAudio.load();
-        startAudio.play();
-        currentWave = beginWave - 1;
-        score = 0;
-        btnStart.remove();
-        btnRules.remove();
-        btnScore.remove();
-    }
-    setupGame();
-    setInterval(update, 10);
-    document.addEventListener("keydown", function (e) {
-        if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
-            e.preventDefault();
 
-        // If in menu
-        // if (inMenu) {
-        //     startGame();
-        //     inGame = true;
-        // }
+    player.draw();
+}
+function endGame() {
+    inGame = false;
+    inMenu = true;
+    enemies.splice(0);
+    bullets.splice(0);
+    smoke.splice(0);
+    player = null;
+    // backMenu();
+    saveResult();
+    startAudio.pause();
+    // startAudio.load();
+}
+function readRules() {
+    btnStart.remove();
+    btnRules.remove();
+    btnScore.remove();
+    wrap.append(rule);
+    wrap.append(btnMainMenu);
 
-        keysDown[e.keyCode] = true;
-    });
+}
+function startGame() {
+    player = new Player(150, canvas.height + 50, spritePlayer);
+    startAudio.load();
+    startAudio.play();
+    currentWave = beginWave - 1;
+    score = 0;
+    btnStart.remove();
+    btnRules.remove();
+    btnScore.remove();
+}
+setupGame();
+setInterval(update, 10);
+document.addEventListener("keydown", function (e) {
+    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
+        e.preventDefault();
 
-    document.addEventListener("keyup", function (e) {
-        keysDown[e.keyCode] = false;
-    });
+    // If in menu
+    // if (inMenu) {
+    //     startGame();
+    //     inGame = true;
+    // }
+
+    keysDown[e.keyCode] = true;
+});
+
+document.addEventListener("keyup", function (e) {
+    keysDown[e.keyCode] = false;
+});
