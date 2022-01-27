@@ -6,19 +6,11 @@ const height = 500;
 canvas.width = width;
 canvas.height = height;
 
-window.addEventListener("resize", Initapp);
-function Initapp(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-
-
 const playerSize = 30;
 const playerSpeed = 1.5;
-const playerHealth = 3;
+const playerHealth = 3;//количество жизней
 const beginWave = 1;
-const shotDelay = 25;
+const shotDelay = 25;//задержка выстрела
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
@@ -29,9 +21,9 @@ let inGame = false;// по умолчанию не в игре фолс
 let inMenu = true;// по умолчанию в меню тру
 let displayWave = 0;
 let score = 0;
-let speed = playerSpeed;
-let numStars = 0;
-let stars = [];//пыль
+let speed = 2;
+let numStars = 50;//количество звезд
+let stars = [];//звезды
 let bullets = [];//пули
 let smoke = [];//выхлоп от игрока
 let player;
@@ -64,7 +56,19 @@ startAudio.volume = 0.2;
 bulletSound.volume = 0.4;
 enemiesBulletSound.volume = 0.4;
 hitTarget.volume = 0.4;
-//создаем массив волн врагов
+
+
+// типы врагов
+//определяем все показатели врагов(здоровье, скорость, размеры, скорость стрельбы, очки, действие)
+let enemiesSprites = [enemies1, enemies2, enemies3, enemies4, enemies5];
+let enemiesHealths = [4, 3, 2, 1, 10];
+let enemiesSpeeds = [1.5, 1, 2, 3, 0.5];
+let enemiesSizes = [25, 40, 20, 20, 35];
+let enemiesBulletSpeeds = [1, 3, 0, 2.5, 1.5];
+let enemiesValues = [100, 150, 50, 100, 300];
+
+
+//создаем массив волн врагов, можем делать любые волны
 let waves = [
     [1, 1, 0],
     [1, 1, 0, 0, 2, 2],
@@ -76,7 +80,7 @@ let waves = [
 ]
 
 
-// 0 вврх, 1 виз, 2 лво, 3 право, 4 выстрл, 5 задркжа)
+// 0 вверх, 1 вниз, 2 лево, 3 право, 4 выстрел, 5 задеркжа)
 let moveEnemies = [
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 4, 5, 1, 1, 1, 1
 ];
@@ -92,15 +96,6 @@ let moveEnemies4 = [
 let moveEnemies5 = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2
 ];
-
-// типы врагов
-//определяем все показатели врагов(здоровье, скорость, размеры, скорость стрельбы, очки, действие)
-let enemiesSprites = [enemies1, enemies2, enemies3, enemies4, enemies5];
-let enemiesHealths = [4, 3, 2, 1, 10];
-let enemiesSpeeds = [1.5, 1, 2, 3, 0.5];
-let enemiesSizes = [25, 40, 20, 20, 35];
-let enemiesBulletSpeeds = [1, 3, 0, 2.5, 1.5];
-let enemiesValues = [100, 150, 50, 100, 300];
 let enemiesPatterns = [moveEnemies, moveEnemies2, moveEnemies3, moveEnemies4, moveEnemies5];
 
 
@@ -158,17 +153,18 @@ class Stars {
             x: Math.floor(Math.random() * canvas.width),
             y: Math.floor(Math.random() * canvas.height)
         };
-        this.update = function () {
+    }
+        update() {
             this.pos.y += speed;
             if (this.pos.y > canvas.height + 10) {
                 this.pos.x = Math.floor(Math.random() * canvas.width);
                 this.pos.y = -10;
             }
         };
-        this.draw = function () {
+        draw() {
             ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
         };
-    }
+    
 }
 //заполняем массив звездами
 function setupGame() {
@@ -407,8 +403,4 @@ window.onbeforeunload = WarnUser;
        {
           allowPrompt = true;
        }
-    }
-    function NoPrompt()
-    {
-       allowPrompt = false;
     }

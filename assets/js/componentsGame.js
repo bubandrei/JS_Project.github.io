@@ -2,34 +2,36 @@ class Bullet {
     constructor(x, y, speed) {
         this.pos = { x, y };
         this.speed = speed;
-        //движение пули
-        this.update = function () {
-            this.pos.y -= this.speed;
-            if (this.pos.y < 55 || this.pos.y > canvas.height) { /////////условие уничтожения пули вверху и внизу
-                this.destroy();
-            }
-        };
-        //рисуем пули
-        this.draw = function () {
-            ctx.fillRect(
-                this.pos.x - bulletSpeed / 2,
-                this.pos.y - bulletSpeed / 2,
-                bulletSpeed, bulletSpeed);
-        };
-        //////уничтожаем пули
-        this.destroy = function () {
-            this.index = bullets.indexOf(this);
-            bullets.splice(this.index, 1);
-        };
     }
+    //движение пули
+    update() {
+        this.pos.y -= this.speed;
+        if (this.pos.y < 55 || this.pos.y > canvas.height) { /////////условие уничтожения пули вверху и внизу
+            this.destroy();
+        }
+    };
+    //рисуем пули
+    draw() {
+        ctx.fillRect(
+            this.pos.x - bulletSpeed / 2,
+            this.pos.y - bulletSpeed / 2,
+            bulletSpeed, bulletSpeed);
+    };
+    //////уничтожаем пули
+    destroy() {
+        this.index = bullets.indexOf(this);
+        bullets.splice(this.index, 1);
+    };
+
 }
 
 class Smoke {
     constructor(x, y) {
         this.pos = { x: x + Math.floor(Math.random() * 8) - 4, y };
         this.lifetime = Math.floor(Math.random() * 30);
+    }
 
-        this.update = function () {
+        update() {
             //движение
             this.pos.x += (Math.random() * 2) - 1;
             this.pos.y += speed;
@@ -40,11 +42,11 @@ class Smoke {
                 smoke.splice(this.index, 1);
             }
         };
-        this.draw = function () {
+        draw() {
             ctx.fillRect(
                 this.pos.x - smokeSize / 2,
                 this.pos.y - smokeSize / 2,
                 smokeSize, smokeSize);
         };
-    }
+    
 }
