@@ -6,6 +6,14 @@ const height = 500;
 canvas.width = width;
 canvas.height = height;
 
+window.addEventListener("resize", Initapp);
+function Initapp(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+
+
 const playerSize = 30;
 const playerSpeed = 1.5;
 const playerHealth = 3;
@@ -22,7 +30,7 @@ let inMenu = true;// по умолчанию в меню тру
 let displayWave = 0;
 let score = 0;
 let speed = playerSpeed;
-let numStars = 100;
+let numStars = 0;
 let stars = [];//пыль
 let bullets = [];//пули
 let smoke = [];//выхлоп от игрока
