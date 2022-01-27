@@ -60,9 +60,7 @@ function lockGetReady(callresult) {
             score: score
         };
         arrResult.push(info)
-        if (arrResult.length > 10) {
-            arrResult.splice(10)
-        }
+
         $.ajax({
             url: ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
             data: { f: 'UPDATE', n: stringName, v: JSON.stringify(arrResult), p: updatePassword },
@@ -96,6 +94,9 @@ function readReady(resultH) {
             return B.score - A.score;
         }
         arrResult.sort(compareScores);
+        if (arrResult.length > 10) {
+            arrResult.splice(10)
+        }
         function getFrom(V, I, A) {
             strName += `<div class = "resultFlex"><span>${V.name}</span><span>${V.score}</span></div>`;
         }
