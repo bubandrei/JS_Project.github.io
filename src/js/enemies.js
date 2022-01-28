@@ -1,13 +1,13 @@
 class Enemie {
     constructor(x, y, type) {
         this.pos = { x, y };
-        this.type = type; // номер волны начинается с 1
+        this.type = type; // wave number starts from 1
 
-        if (this.type == 1) { //координаты начала движения врагов 1
+        if (this.type == 1) { //begin moves enemies
             this.pos.x = -((Math.random() * 250) + 20);
             this.pos.y = (Math.random() * 100) + 100;
             if (Math.random() > 0.5) {
-                this.pos.x = canvas.width - this.pos.x; //???????????????????????????????????????????????????????????????
+                this.pos.x = canvas.width - this.pos.x;
             }
 
         }
@@ -19,19 +19,19 @@ class Enemie {
         this.pattern = enemiesPatterns[this.type];
 
         this.stepInPattern = Math.floor(Math.random() * this.pattern.length * 10);
-        this.changeDir = 1; //отталкивание врагов от стен
+        this.changeDir = 1; //pushing enemies away from borders
         this.shoot = false;
     }
 
     update() {
-        //попадание пули во врага
+        //bullet hitting the enemy
         for (let i = 0; i < bullets.length; i++) {
             if (bullets[i].speed > 0) {
                 if (Math.abs(this.pos.x - bullets[i].pos.x) < this.size / 1.5 &&
                     Math.abs(this.pos.y - bullets[i].pos.y) < this.size / 1.5) {
                     hitTarget.play();
-                    this.health--; //уменьшаем здоровье
-                    bullets[i].destroy(); //чистим пули
+                    this.health--; //lower health
+                    bullets[i].destroy(); //cleaning bullets
                 }
             }
         }
@@ -40,17 +40,17 @@ class Enemie {
             hitTarget.play();
             this.destroy();
         };
-        // Вернуться к началу, если дошел до низа
+        // return top if we have reached the bottom
         if (this.pos.y > canvas.height - 15) {
             this.pos.x = Math.random() * (canvas.width - 100) + 50;
             this.pos.y = 55;
         }
-        //Повторно увеличивает шаблон (меняется каждые 10 кадров)
+        //increases pattern (changes every 10 frames)
         this.stepInPattern++;
         if (this.stepInPattern > this.pattern.length * 10) {
             this.stepInPattern = 0;
         }
-        // 1 пуля
+        // 1 bullet
         if (this.stepInPattern % 10 == 0) {
             this.shoot = false;
         }
@@ -67,13 +67,13 @@ class Enemie {
                 enemiesBulletSound.play();
             }
         }
-        // отталкивание врагов от стен
+        // change moves
         if (this.pos.x < this.size)
             this.changeDir = -1;
         if (this.pos.x > canvas.width - this.size)
             this.changeDir = 1;
     };
-    // Draws to frame
+    // draws to frame
     draw() {
         ctx.drawImage(
             this.sprite,

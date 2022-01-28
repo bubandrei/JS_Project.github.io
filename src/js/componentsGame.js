@@ -3,21 +3,21 @@ class Bullet {
         this.pos = { x, y };
         this.speed = speed;
     }
-    //движение пули
+    //move bullets
     update() {
         this.pos.y -= this.speed;
         if (this.pos.y < 55 || this.pos.y > canvas.height) { /////////условие уничтожения пули вверху и внизу
             this.destroy();
         }
     };
-    //рисуем пули
+    //draw bullets
     draw() {
         ctx.fillRect(
             this.pos.x - bulletSpeed / 2,
             this.pos.y - bulletSpeed / 2,
             bulletSpeed, bulletSpeed);
     };
-    //////уничтожаем пули
+    //////clean bullets
     destroy() {
         this.index = bullets.indexOf(this);
         bullets.splice(this.index, 1);
@@ -32,7 +32,7 @@ class Smoke {
     }
 
         update() {
-            //движение
+            //move
             this.pos.x += (Math.random() * 2) - 1;
             this.pos.y += speed;
 

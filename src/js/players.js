@@ -15,10 +15,6 @@ class Player {
         this.playerExitScreen = true;
         this.gunLoaded = 0;
     }
-    // this.speedBoost = 0;
-    // this.bulletBoost = 0;
-    // this.immortalBoost = 0;
-    // this.actualSpeedBoost = 1; //можно задать скорость жестко или удалить вообще и из hasControl
 
     update() {
         smoke.push(new Smoke(this.pos.x, this.pos.y + 10));
@@ -29,7 +25,7 @@ class Player {
                 this.playerExitScreen = false;
             }
         } else {
-            for (let i = 0; i < bullets.length; i++) { //попадание пули
+            for (let i = 0; i < bullets.length; i++) { //bullet hit
                 if (bullets[i].speed < 0) {
                     if (Math.abs(this.pos.x - bullets[i].pos.x) < playerSize / 1.5 &&
                         Math.abs(this.pos.y - bullets[i].pos.y) < playerSize / 1.5) {
@@ -39,7 +35,7 @@ class Player {
                     }
                 }
             }
-            // столкновение с пришельцем
+            // crash with enemies
             for (let i = 0; i < enemies.length; i++) {
                 if (Math.abs(this.pos.x - enemies[i].pos.x) < (playerSize + enemies[i].size) / 2 &&
                     Math.abs(this.pos.y - enemies[i].pos.y) < (playerSize + enemies[i].size) / 2) {
@@ -47,23 +43,23 @@ class Player {
                     enemies[i].destroy();
                 }
             }
-            //границ слева по х
+            //гborders on the left by x
             if (this.pos.x < playerSize) {
                 this.pos.x = playerSize;
             }
-            //граница справа по х
+            //borders on the right by x
             if (this.pos.x + playerSize > canvas.width) {
                 this.pos.x = canvas.width - playerSize;
             }
-            //граница по y низ
+            //border bottom by y
             if (this.pos.y > canvas.height - 10 - playerSize) {
                 this.pos.y = canvas.height - 10 - playerSize;
             }
-            //граница по y вверх
+            //border top by y
             if (this.pos.y < playerSize + 55) {
                 this.pos.y = playerSize + 55;
             }
-            //пули
+            //bullets
             if (this.gunLoaded > 0) {
                 this.gunLoaded--;
             } else {
@@ -74,7 +70,7 @@ class Player {
                 this.death();
             }
             if (this.control) {
-                // передвижение
+                // move
                 if (keysDown[this.upKey]) {
                     this.pos.y -= playerSpeed;
                 } else if (keysDown[this.downKey]) {

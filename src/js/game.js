@@ -8,58 +8,58 @@ canvas.height = height;
 
 const playerSize = 30;
 const playerSpeed = 1.5;
-const playerHealth = 3;//количество жизней
+const playerHealth = 3;//number of lives
 const beginWave = 1;
-const shotDelay = 25;//задержка выстрела
+const shotDelay = 25;//shot delay
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
 const heartSize = 30;
 
 let keysDown = [];
-let inGame = false;// по умолчанию не в игре фолс
-let inMenu = true;// по умолчанию в меню тру
+let inGame = false;// default not in game false
+let inMenu = true;// default in the menu
 let displayWave = 0;
 let score = 0;
 let speed = 2;
-let numStars = 50;//количество звезд
-let stars = [];//звезды
-let bullets = [];//пули
-let smoke = [];//выхлоп от игрока
+let numStars = 50;//number of stars
+let stars = [];//array for stars
+let bullets = [];//array for bullets
+let smoke = [];//output from the player
 let player;
-let currentWave = 0;//текущая волна
-let startWave = false;//начинаем с неволны
-let enemies = []; //создаем массив для врагов
+let currentWave = 0;//current wave
+let startWave = false;//start no wave
+let enemies = []; //creat array for enemy
 
 let spritePlayer = new Image();
-spritePlayer.src = "assets/img/shuttle.png";
+spritePlayer.src = "src/img/shuttle.png";
 let enemies1 = new Image();
-enemies1.src = "assets/img/enemy_1.png";
+enemies1.src = "src/img/enemy_1.png";
 let enemies2 = new Image();
-enemies2.src = "assets/img/enemy_2.png";
+enemies2.src = "src/img/enemy_2.png";
 let enemies3 = new Image();
-enemies3.src = "assets/img/enemy_3.png";
+enemies3.src = "src/img/enemy_3.png";
 let enemies4 = new Image();
-enemies4.src = "assets/img/enemy_4.png";
+enemies4.src = "src/img/enemy_4.png";
 let enemies5 = new Image();
-enemies5.src = "assets/img/enemy_5.png";
+enemies5.src = "src/img/enemy_5.png";
 let heart = new Image();
-heart.src = "assets/img/heart.png";
+heart.src = "src/img/heart.png";
 
-const startAudio = new Audio('assets/sound/bgmusic.mp3');
-const bulletSound = new Audio('assets/sound/3.mp3');
-const enemiesBulletSound = new Audio('assets/sound/2.mp3')
-const hitPlayer = new Audio('assets/sound/explode1.mp3')
-const hitTarget = new Audio('assets/sound/explode2.mp3')
-const destroyPlayerSound = new Audio('assets/sound/explode.m4a')
+const startAudio = new Audio('src/sound/bgmusic.mp3');
+const bulletSound = new Audio('src/sound/3.mp3');
+const enemiesBulletSound = new Audio('src/sound/2.mp3')
+const hitPlayer = new Audio('src/sound/explode1.mp3')
+const hitTarget = new Audio('src/sound/explode2.mp3')
+const destroyPlayerSound = new Audio('src/sound/explode.m4a')
 startAudio.volume = 0.2;
 bulletSound.volume = 0.4;
 enemiesBulletSound.volume = 0.4;
 hitTarget.volume = 0.4;
 
 
-// типы врагов
-//определяем все показатели врагов(здоровье, скорость, размеры, скорость стрельбы, очки, действие)
+// types of enemies
+//determine all indicators of enemies (sprite, health, speed, size, rate of fire, points)
 let enemiesSprites = [enemies1, enemies2, enemies3, enemies4, enemies5];
 let enemiesHealths = [4, 3, 2, 1, 10];
 let enemiesSpeeds = [1.5, 1, 2, 3, 0.5];
@@ -68,7 +68,7 @@ let enemiesBulletSpeeds = [1, 3, 0, 2.5, 1.5];
 let enemiesValues = [100, 150, 50, 100, 300];
 
 
-//создаем массив волн врагов, можем делать любые волны
+//create an array of waves for enemies, we can make any waves witn any enemies
 let waves = [
     [1, 1, 0],
     [1, 1, 0, 0, 2, 2],
@@ -80,7 +80,7 @@ let waves = [
 ]
 
 
-// 0 вверх, 1 вниз, 2 лево, 3 право, 4 выстрел, 5 задеркжа)
+// 0 up, 1 down, 2 left, 3 right, 4 shot, 5 delay
 let moveEnemies = [
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 4, 5, 1, 1, 1, 1
 ];
@@ -98,7 +98,7 @@ let moveEnemies5 = [
 ];
 let enemiesPatterns = [moveEnemies, moveEnemies2, moveEnemies3, moveEnemies4, moveEnemies5];
 
-
+//create menu, buttons
 const btnStart = document.createElement("button");
 btnStart.innerHTML = "Start";
 btnStart.classList.add('btn')
@@ -146,7 +146,7 @@ function backMenu() {
     gameover.remove();
 }
 
-//класс звездное небо
+//class stars sky
 class Stars {
     constructor() {
         this.pos = {
@@ -166,26 +166,26 @@ class Stars {
         };
     
 }
-//заполняем массив звездами
+//fill the array of stars
 function setupGame() {
     for (let i = 0; i < numStars; i++) {
-        stars.push(new Stars());//в массив каждый раз добавляем
+        stars.push(new Stars());//add class in array
     }
     if (inMenu) {
         startAudio.play();
     }
 }
-//обновляем все
+//update all
 function update() {
-    //обновляем звезды
+    //update stars
     for (let i = 0; i < stars.length; i++) {
         stars[i].update();
     }
-    //обновляем пули
+    //update bullets
     for (let i = 0; i < bullets.length; i++) {
         bullets[i].update();
     }
-    //обновляем выхлоп
+    //update smoke behind the player ship
     for (let i = 0; i < smoke.length; i++) {
         smoke[i].update();
     }
@@ -198,7 +198,7 @@ function update() {
             enemies[i].update();
     } else {
     }
-    // обновляем волны
+    // update waves
     if (inGame) {
         updateWave();
     }
@@ -221,16 +221,16 @@ function draw() {
     if (inMenu) {
         drawMenu();
     }
-    //если в игре, то рисуем ui
+    //if in the game, we draw ui and game
     if (inGame) {
-        drawUI()
-    }
-    //если в игре то рисуем игру
-    if (inGame) {
+        drawUI();
         drawGame();
     }
+    // if (inGame) {
+    //     drawGame();
+    // }
 
-    //границы
+    //borders
     ctx.fillStyle = "orange";
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, 4);
@@ -246,28 +246,26 @@ function draw() {
     ctx.fill();
 }
 function updateWave() {
-    if (enemies.length == 0 && !inMenu) {//если врагов 0 и мы не в меню
-        startWave = true;//флаг тру для волны
-        currentWave++; // добавлеям волну
+    if (enemies.length == 0 && !inMenu) {//if 0 enemies and we are not in the menu
+        startWave = true;//flag true for waves
+        currentWave++; // add wave
     }
     if (startWave) {
         startWave = false;
         displayWave = 200;
-        if (currentWave <= waves.length) {//если текущая волна меньши длинны массива
-            for (let i = 0; i < waves[currentWave - 1].length; i++) { //пока i меньше длинны подмассива(кол-во врагов
-                // в волне) 
+        if (currentWave <= waves.length) {//if the current wave is less than the length of the array
+            for (let i = 0; i < waves[currentWave - 1].length; i++) { //while i less than the length of the subarray (number of enemies in the wave) 
                 enemies.push(new Enemie(
                     Math.random() * (canvas.width - 100) + 50,
                     55,
-                    waves[currentWave - 1][i]));//двумерный массив
+                    waves[currentWave - 1][i]));//two-dimensional array
             }
         } else {
-            for (let i = 0; i < currentWave; i++) { //пока i меньше длинны подмассива(кол-во врагов
-                // в волне) 
+            for (let i = 0; i < currentWave; i++) { 
                 enemies.push(new Enemie(
                     Math.random() * (canvas.width - 100) + 50,
                     55,
-                    Math.floor(Math.random() * 5)));//двумерный массив
+                    Math.floor(Math.random() * 5)));//infinite waves
             }
         }
     }
@@ -277,10 +275,10 @@ function drawMenu() {
     let shakingY = (Math.random() * 3) - 1.5;
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 140) + shakingX, 97 + shakingY);
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 100 + shakingY);
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 140) + shakingX, 100 + shakingY);
 
     ctx.beginPath();
     ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
@@ -307,7 +305,7 @@ function drawUI() {
     ctx.fillStyle = "grey";
     ctx.fill();
 
-    // номр волны
+    // number of wave
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText("Wave " + currentWave, 10, 35);
@@ -323,7 +321,7 @@ function drawUI() {
     ctx.font = "20px Arial";
     ctx.fillText("Score " + score, canvas.width - 150, 35);
 
-    //жизнь
+    //heart
     for (let i = 0; i < player.health; i++) {
         ctx.drawImage(
             heart,
@@ -334,17 +332,17 @@ function drawUI() {
     }
 }
 function drawGame() {
-    //пули
+    //bullets
     ctx.fillStyle = "white";
     for (let i = 0; i < bullets.length; i++) {
         bullets[i].draw()
     }
-    //выхлоп
+    //smoke
     ctx.fillStyle = 'white';
     for (let i = 0; i < smoke.length; i++) {
         smoke[i].draw();
     }
-    //враги
+    //enemies
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].draw();
     }
