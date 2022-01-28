@@ -2,12 +2,11 @@ class Player {
     constructor(x, y, sprite) {
         this.pos = { x, y };
         this.sprite = sprite;
-        this.upKey = 87;
-        this.downKey = 83;
-        this.leftKey = 65;
-        this.rightKey = 68;
-        this.shootKey = 32;
-        this.playerNum = 1;
+        this.upKey = "ArrowUp";
+        this.downKey = "ArrowDown";
+        this.leftKey = "ArrowLeft";
+        this.rightKey = "ArrowRight";
+        this.shootKey = "Space";
 
         this.health = playerHealth;
         this.die = false;

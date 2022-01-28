@@ -46,13 +46,14 @@ enemies5.src = "src/img/enemy_5.png";
 let heart = new Image();
 heart.src = "src/img/heart.png";
 
-const startAudio = new Audio('src/sound/bgmusic.mp3');
+const menuMusic = new Audio('src/sound/frontscreen.mp3')
+const gameAudio = new Audio('src/sound/bgmusic.mp3');
 const bulletSound = new Audio('src/sound/3.mp3');
 const enemiesBulletSound = new Audio('src/sound/2.mp3')
 const hitPlayer = new Audio('src/sound/explode1.mp3')
 const hitTarget = new Audio('src/sound/explode2.mp3')
 const destroyPlayerSound = new Audio('src/sound/explode.m4a')
-startAudio.volume = 0.2;
+gameAudio.volume = 0.2;
 bulletSound.volume = 0.4;
 enemiesBulletSound.volume = 0.4;
 hitTarget.volume = 0.4;
@@ -125,7 +126,7 @@ wrap.append(btnRules);
 wrap.append(btnScore);
 
 const rule = document.createElement('span');
-rule.innerHTML = "STAR WARS online is cool space shooter! Take control on spaceship and protect Earth from alien swarms!";
+rule.innerHTML = "Take control on spaceship and protect Earth from aliens! You are able to move the spaceship all four directions:</br>Arrow Up : Move Up.</br>Arrow Down : Move Down.</br>Arrow Right : Move Right.</br>Arrow Left : Move Left.</br>Space Bar: Release Bullet from spaceship.</br>";
 rule.classList.add('rule')
 
 const btnMainMenu = document.createElement('button');
@@ -154,17 +155,17 @@ class Stars {
             y: Math.floor(Math.random() * canvas.height)
         };
     }
-        update() {
-            this.pos.y += speed;
-            if (this.pos.y > canvas.height + 10) {
-                this.pos.x = Math.floor(Math.random() * canvas.width);
-                this.pos.y = -10;
-            }
-        };
-        draw() {
-            ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
-        };
-    
+    update() {
+        this.pos.y += speed;
+        if (this.pos.y > canvas.height + 10) {
+            this.pos.x = Math.floor(Math.random() * canvas.width);
+            this.pos.y = -10;
+        }
+    };
+    draw() {
+        ctx.fillRect(this.pos.x, this.pos.y, 1, 1);
+    };
+
 }
 //fill the array of stars
 function setupGame() {
@@ -172,7 +173,8 @@ function setupGame() {
         stars.push(new Stars());//add class in array
     }
     if (inMenu) {
-        startAudio.play();
+        menuMusic.load();
+        menuMusic.play();
     }
 }
 //update all
@@ -261,7 +263,7 @@ function updateWave() {
                     waves[currentWave - 1][i]));//two-dimensional array
             }
         } else {
-            for (let i = 0; i < currentWave; i++) { 
+            for (let i = 0; i < currentWave; i++) {
                 enemies.push(new Enemie(
                     Math.random() * (canvas.width - 100) + 50,
                     55,
@@ -275,34 +277,28 @@ function drawMenu() {
     let shakingY = (Math.random() * 3) - 1.5;
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 140) + shakingX, 97 + shakingY);
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 145) + shakingX, 97 + shakingY);
     ctx.fillStyle = "orange";
     ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 140) + shakingX, 100 + shakingY);
+    ctx.fillText("STAR WARS", (canvas.width / 2 - 145) + shakingX, 100 + shakingY);
 
     ctx.beginPath();
-    ctx.rect((canvas.width / 2 - 135) + shakingX, 110 + shakingY, 265, 10);
+    ctx.rect((canvas.width / 2 - 130) + shakingX, 110 + shakingY, 265, 10);
     ctx.fillStyle = "darkred";
     ctx.fill();
     ctx.beginPath();
-    ctx.rect((canvas.width / 2 - 135) + shakingX, 115 + shakingY, 265, 10);
+    ctx.rect((canvas.width / 2 - 130) + shakingX, 115 + shakingY, 265, 10);
     ctx.fillStyle = "orange";
     ctx.fill();
 
     ctx.fillStyle = "orange";
-    ctx.font = "50px Arial";
-    ctx.fillText("STAR WARS", (canvas.width / 2 - 150) + shakingX, 97 + shakingY);
-
+    ctx.font = "10px Arial";
+    ctx.fillText("Handmade by A.Bubelev. All rights reserved.", canvas.width / 2 - 95, canvas.height - 30);
 }
 function drawUI() {
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, 55);
     ctx.fillStyle = "orange";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.rect(0, canvas.height - 20, canvas.width, 0);
-    ctx.fillStyle = "grey";
     ctx.fill();
 
     // number of wave
@@ -314,7 +310,7 @@ function drawUI() {
     ctx.font = "35px Arial";
     if (displayWave > 0) {
         displayWave--;
-        ctx.fillText("Wave " + currentWave, canvas.width / 2.5, canvas.height / 2);
+        ctx.fillText("Wave " + currentWave, canvas.width / 2.6, canvas.height / 2);
     }
 
     ctx.fillStyle = "white";
@@ -357,7 +353,7 @@ function endGame() {
     smoke.splice(0);
     player = null;
     saveResult();
-    startAudio.pause();
+    gameAudio.pause();
 }
 function readRules() {
     btnStart.remove();
@@ -368,8 +364,9 @@ function readRules() {
 }
 function startGame() {
     player = new Player(150, canvas.height + 50, spritePlayer);
-    startAudio.load();
-    startAudio.play();
+    menuMusic.pause();
+    gameAudio.load();
+    gameAudio.play();
     currentWave = beginWave - 1;
     score = 0;
     btnStart.remove();
@@ -378,27 +375,17 @@ function startGame() {
 }
 setupGame();
 setInterval(update, 10);
-document.addEventListener("keydown", function (e) {
-    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)
-        e.preventDefault();
-    keysDown[e.keyCode] = true;
+document.addEventListener("keydown", function (event) {
+    if (["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp", "Space"].indexOf(event.code) > -1)
+        event.preventDefault();
+    keysDown[event.code] = true;
+
 });
-document.addEventListener("keyup", function (e) {
-    keysDown[e.keyCode] = false;
+document.addEventListener("keyup", function (event) {
+    keysDown[event.code] = false;
 });
 
-
-
-let allowPrompt = true;
-window.onbeforeunload = WarnUser;
-    function WarnUser()
-    {
-       if(allowPrompt)
-       {
-          event.returnValue = "You have made changes. They will be lost if you continue.";
-       }
-       else
-       {
-          allowPrompt = true;
-       }
-    }
+window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+    event.returnValue = 'You have made changes. They will be lost if you continue.';
+});
