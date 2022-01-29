@@ -10,7 +10,7 @@ const playerSize = 30;
 const playerSpeed = 1.5;
 const playerHealth = 3;//number of lives
 const beginWave = 1;
-const shotDelay = 25;//shot delay
+const shotDelay = 50;//shot delay
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
@@ -46,13 +46,14 @@ enemies5.src = "src/img/enemy_5.png";
 let heart = new Image();
 heart.src = "src/img/heart.png";
 
-const menuMusic = new Audio('src/sound/frontscreen.mp3')
+const menuMusic = new Audio('src/sound/startMusic.mp3');
 const gameAudio = new Audio('src/sound/bgmusic.mp3');
 const bulletSound = new Audio('src/sound/3.mp3');
-const enemiesBulletSound = new Audio('src/sound/2.mp3')
-const hitPlayer = new Audio('src/sound/explode1.mp3')
-const hitTarget = new Audio('src/sound/explode2.mp3')
-const destroyPlayerSound = new Audio('src/sound/explode.m4a')
+const enemiesBulletSound = new Audio('src/sound/2.mp3');
+const hitPlayer = new Audio('src/sound/explode1.mp3');
+const hitTarget = new Audio('src/sound/explode2.mp3');
+const destroyPlayerSound = new Audio('src/sound/explode.m4a');
+menuMusic.volume = 0.5;
 gameAudio.volume = 0.2;
 bulletSound.volume = 0.4;
 enemiesBulletSound.volume = 0.4;
@@ -173,7 +174,6 @@ function setupGame() {
         stars.push(new Stars());//add class in array
     }
     if (inMenu) {
-        menuMusic.load();
         menuMusic.play();
     }
 }
@@ -228,10 +228,6 @@ function draw() {
         drawUI();
         drawGame();
     }
-    // if (inGame) {
-    //     drawGame();
-    // }
-
     //borders
     ctx.fillStyle = "orange";
     ctx.beginPath();

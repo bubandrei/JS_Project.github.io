@@ -42,7 +42,7 @@ class Player {
                     enemies[i].destroy();
                 }
             }
-            //гborders on the left by x
+            //borders on the left by x
             if (this.pos.x < playerSize) {
                 this.pos.x = playerSize;
             }
