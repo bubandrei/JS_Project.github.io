@@ -48,8 +48,8 @@ heart.src = "src/img/heart.png";
 
 const menuMusic = new Audio('src/sound/startMusic.mp3');
 const gameAudio = new Audio('src/sound/bgmusic.mp3');
-const bulletSound = new Audio('src/sound/3.mp3');
-const enemiesBulletSound = new Audio('src/sound/2.mp3');
+const bulletSound = new Audio('src/sound/bulSound.mp3');
+const enemiesBulletSound = new Audio('src/sound/enemBulSound.mp3');
 const hitPlayer = new Audio('src/sound/explode1.mp3');
 const hitTarget = new Audio('src/sound/explode2.mp3');
 const destroyPlayerSound = new Audio('src/sound/explode.m4a');
