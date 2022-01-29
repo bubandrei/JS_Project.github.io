@@ -53,11 +53,11 @@ const enemiesBulletSound = new Audio('src/sound/enemBulSound.mp3');
 const hitPlayer = new Audio('src/sound/explode1.mp3');
 const hitTarget = new Audio('src/sound/explode2.mp3');
 const destroyPlayerSound = new Audio('src/sound/explode.m4a');
-menuMusic.volume = 0.5;
-gameAudio.volume = 0.2;
-bulletSound.volume = 0.4;
-enemiesBulletSound.volume = 0.4;
-hitTarget.volume = 0.4;
+menuMusic.volume = 0.1;
+gameAudio.volume = 0.1;
+bulletSound.volume = 0.1;
+enemiesBulletSound.volume = 0.1;
+hitTarget.volume = 0.1;
 
 
 // types of enemies
@@ -67,7 +67,7 @@ let enemiesHealths = [4, 3, 2, 1, 10];
 let enemiesSpeeds = [1.5, 1, 2, 3, 0.5];
 let enemiesSizes = [25, 40, 20, 20, 35];
 let enemiesBulletSpeeds = [1, 3, 0, 2.5, 1.5];
-let enemiesValues = [100, 150, 50, 100, 300];
+let enemiesValues = [400, 350, 50, 100, 300];
 
 
 //create an array of waves for enemies, we can make any waves witn any enemies
@@ -341,6 +341,18 @@ function drawGame() {
 
     player.draw();
 }
+
+function startGame() {
+    player = new Player(150, canvas.height + 50, spritePlayer);
+    menuMusic.pause();
+    gameAudio.load();
+    gameAudio.play();
+    currentWave = beginWave - 1;
+    score = 0;
+    btnStart.remove();
+    btnRules.remove();
+    btnScore.remove();
+}
 function endGame() {
     inGame = false;
     inMenu = true;
@@ -357,17 +369,6 @@ function readRules() {
     btnScore.remove();
     wrap.append(rule);
     wrap.append(btnMainMenu);
-}
-function startGame() {
-    player = new Player(150, canvas.height + 50, spritePlayer);
-    menuMusic.pause();
-    gameAudio.load();
-    gameAudio.play();
-    currentWave = beginWave - 1;
-    score = 0;
-    btnStart.remove();
-    btnRules.remove();
-    btnScore.remove();
 }
 setupGame();
 setInterval(update, 10);
