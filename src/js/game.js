@@ -10,7 +10,7 @@ const playerSize = 30;
 const playerSpeed = 1.5;
 const playerHealth = 3;//number of lives
 const beginWave = 1;
-const shotDelay = 80;//shot delay
+const shotDelay = 50;//shot delay
 const shotSpeed = 3;
 const bulletSpeed = 4;
 const smokeSize = 3;
@@ -30,6 +30,7 @@ let player;
 let currentWave = 0;//current wave
 let startWave = false;//start no wave
 let enemies = []; //creat array for enemy
+
 
 let spritePlayer = new Image();
 spritePlayer.src = "src/img/shuttle.png";
@@ -191,6 +192,9 @@ function update() {
     for (let i = 0; i < smoke.length; i++) {
         smoke[i].update();
     }
+    for (let i = 0; i < powerups.length; i++) {
+        powerups[i].update()
+    }
     if (inGame) {
         if (inMenu) {
             inMenu = false;
@@ -247,6 +251,14 @@ function updateWave() {
     if (enemies.length == 0 && !inMenu) {//if 0 enemies and we are not in the menu
         startWave = true;//flag true for waves
         currentWave++; // add wave
+        if (player.health < playerHealth) {
+            player.health++;
+        }
+        if (currentWave != 1) {
+            powerups.push(new Powerup(Math.random() * canvas.width, 55));
+            powerups.push(new Powerup(Math.random() * canvas.width, 55));
+            score += 2000;
+        }
     }
     if (startWave) {
         startWave = false;
@@ -322,6 +334,32 @@ function drawUI() {
             heartSize,
             heartSize);
     }
+    // Powerup display 1
+    if (player.speedBoost > 0)
+        ctx.drawImage(
+            powerup3,
+            23 - (player.speedBoost * ui_powerupAdjust),
+            (canvas.height - 67) - (player.speedBoost * ui_powerupAdjust),
+            ui_powerupSize * player.speedBoost,
+            ui_powerupSize * player.speedBoost);
+
+    if (player.bulletBoost > 0)
+        ctx.drawImage(
+            powerup4,
+            53 - (player.bulletBoost * ui_powerupAdjust),
+            (canvas.height - 67) - (player.bulletBoost * ui_powerupAdjust),
+            ui_powerupSize * player.bulletBoost,
+            ui_powerupSize * player.bulletBoost);
+
+    if (player.immortalBoost > 0)
+        ctx.drawImage(
+            powerup5,
+            83 - (player.immortalBoost * ui_powerupAdjust),
+            (canvas.height - 67) - (player.immortalBoost * ui_powerupAdjust),
+            ui_powerupSize * player.immortalBoost,
+            ui_powerupSize * player.immortalBoost);
+
+
 }
 function drawGame() {
     //bullets
@@ -337,6 +375,9 @@ function drawGame() {
     //enemies
     for (let i = 0; i < enemies.length; i++) {
         enemies[i].draw();
+    }
+    for (let i = 0; i < powerups.length; i++) {
+        powerups[i].draw();
     }
 
     player.draw();

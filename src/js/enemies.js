@@ -83,6 +83,9 @@ class Enemie {
             this.size);
     };
     destroy() {
+        if(Math.floor(Math.random()*8)==0){
+            powerups.push(new Powerup(this.pos.x, this.pos.y));
+        }
         score += enemiesValues[this.type];
         this.index = enemies.indexOf(this);
         enemies.splice(this.index, 1);
